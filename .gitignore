@@ -1,0 +1,72 @@
+# ===== CMake build files =====
+# Ignore the main build output directory (if you named it "build")
+build/
+# CMake cache, generated build scripts, install manifests, etc.
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+install_manifest.txt
+
+# ===== Binaries & object files =====
+# Executables
+*.exe
+*.out
+*.app
+# Shared libraries
+*.so
+*.dylib
+*.dll
+# Static libraries
+*.a
+*.lib
+# Object files
+*.o
+*.obj
+
+# ===== IDE / Editor =====
+# VS Code workspace settings & history
+.vscode/
+*.code-workspace
+# CLion, JetBrains
+.idea/
+# Vim swap, backup, undo
+*.swp
+*.swo
+*.un~
+# Emacs
+*~
+\#*\#
+.#*
+ 
+# ===== Logs =====
+*.log
+
+# ===== Testing artifacts =====
+# Google Test, Catch2, etc.
+TestingTemporaryDirectory/
+# Coverage data
+*.gcno
+*.gcda
+coverage/
+
+# ===== OS files =====
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# ===== Misc =====
+# CPack-generated packages
+*.tar.gz
+*.zip
+*.7z
+*.deb
+*.rpm
+# Generated documentation
+docs/html/
+docs/xml/

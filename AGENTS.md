@@ -1,11 +1,19 @@
-General: 
+General:
 - Suggest code (and comment if neccessary) in English, regardless language of the prompt.
-- After everychange, update the project structure section so that it correctly reflect the project.
+- After every change, update the project structure section so that it correctly reflects the project.
 
-Project Structure: 
+Project Structure:
+- AGENTS.md
+- README.md
+- CMakeLists.txt
+- include/
+    - dummy.h
+- src/
+    - main.cpp
+    - dummy.cpp
 
-
-Naming Convention: 
+Naming Convention:
 - For variable: use snake_case
-- For function parameters: use _snake_case_with_hyperscore_before'
-- For function name: user camelCase() 
+- For function parameters: use _snake_case_with_hyperscore_before
+- For function name: user camelCase()
+
