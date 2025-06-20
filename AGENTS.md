@@ -8,9 +8,13 @@ Project Structure:
 - CMakeLists.txt
 - include/
     - dummy.h
+    - compression.h
 - src/
     - main.cpp
     - dummy.cpp
+    - compression.cpp
+- tests/
+    - dummy_test.cpp
 
 Naming Convention:
 - For variable: use snake_case
