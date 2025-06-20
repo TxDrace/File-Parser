@@ -35,8 +35,6 @@ The easiest way to switch between different compilers is using VS Code's CMake e
 
 2. **Manual compiler selection:**
 
-2. **Manual compiler selection:**
-
 For Visual Studio Clang:
 ```cmd
 # Using Clang with Visual Studio generator
