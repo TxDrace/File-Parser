@@ -3,6 +3,7 @@ General:
 - After every change, update the project structure section so that it correctly reflects the project.
 
 Project Structure:
+- COMPILER_SUPPORT.md
 - AGENTS.md
 - README.md
 - CMakeLists.txt

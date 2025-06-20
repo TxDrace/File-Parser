@@ -9,14 +9,18 @@ Before contributing to this project, ensure you have the following installed:
 ### Required Tools
 - **Git** - For version control
 - **CMake** (version 3.10 or higher) - For build configuration
+  - *Current environment: CMake 4.0.3*
 - **C++ Compiler** with C++11 support:
-  - **Windows**: Visual Studio 2017+ or MinGW-w64
-  - **Linux**: GCC 7+ or Clang 5+
-  - **macOS**: Xcode 9+ or Clang 5+
+  - **Windows**: Visual Studio 2017+ (currently using VS 2022 Community)
+    - Includes MSVC compiler and Clang-cl (Clang 19.1.5)
+  - **Alternative**: MinGW-w64/MSYS2 GCC (currently GCC 14.2.0 available)
+  - **Linux**: GCC 7+ or Clang 5+ (for cross-platform development)
+  - **macOS**: Xcode 9+ or Clang 5+ (for cross-platform development)
 
 ### Optional but Recommended
-- **Visual Studio Code** or your preferred IDE
+- **Visual Studio Code** with CMake extension - For easy compiler switching
 - **Git Bash** (Windows users) for better cross-platform script compatibility
+- **MSYS2** (current environment) for Unix-like tools on Windows
 
 ## Getting Started for New Contributors
 
@@ -120,6 +124,20 @@ cd build
 .\Debug\file_parser.exe  # Windows
 ```
 
+### Testing Different Compilers
+
+To verify the project works with different compilers (VS Code method):
+
+1. **Open Command Palette**: `Ctrl+Shift+P`
+2. **Select Kit**: Run `CMake: Select a Kit`
+3. **Choose Compiler**: 
+   - Visual Studio Community 2022 (MSVC)
+   - Clang for MSVC (Clang-cl)
+   - GCC (if available)
+4. **Configure**: Run `CMake: Configure`
+5. **Build**: Run `CMake: Build`
+6. **Test**: Run `CMake: Run Tests`
+
 ## Project Structure
 
 ```
@@ -139,6 +157,7 @@ File-Parser/
 ├── vcpkg.json        # Dependency specification
 ├── build.bat         # Windows build script
 ├── build.sh          # Cross-platform build script
+├── COMPILER_SUPPORT.md    # Compiler verification info
 └── dev.sh            # Development script with options
 ```
 
@@ -200,6 +219,17 @@ To add new C++ dependencies:
 - **Shared Libraries**: Use `-DBUILD_SHARED=ON` or `./dev.sh shared`
 - **Debug Build**: Default mode, or use `./dev.sh debug`
 - **Release Build**: Use `./dev.sh release`
+
+## Compiler Support
+
+This project has been successfully built with:
+- **MSVC 19.44.35209** (Visual Studio 2022 Community) on Windows 10
+- **Clang 19.1.5** (provided through Visual Studio 2022) on Windows 10
+- **GCC 14.2.0** (MSYS2) available on Windows 10
+
+The project uses Visual Studio 2022 generator by default. **To test different compilers**, use VS Code's `CMake: Select a Kit` command to switch between MSVC, Clang-cl, and GCC options.
+
+For detailed compiler information and build configurations, see `COMPILER_SUPPORT.md`.
 
 ## Troubleshooting
 
