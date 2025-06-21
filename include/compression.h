@@ -6,4 +6,4 @@
 // Returns the current zlib version string.
 std::string getZlibVersion();
 
-#endif // COMPRESSION_H
+#endif  // COMPRESSION_H

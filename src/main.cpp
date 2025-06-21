@@ -1,6 +1,6 @@
-#include <iostream>
-#include "dummy.h"
 #include "compression.h"
+#include "dummy.h"
+#include <iostream>
 
 int main() {
     int sum = addNumbers(2, 3);

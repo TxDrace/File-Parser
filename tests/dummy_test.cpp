@@ -1,5 +1,5 @@
-#include "dummy.h"
 #include "compression.h"
+#include "dummy.h"
 #include <cassert>
 #include <iostream>
 

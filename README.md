@@ -22,6 +22,13 @@ Before contributing to this project, ensure you have the following installed:
 - **Git Bash** (Windows users) for better cross-platform script compatibility
 - **MSYS2** (current environment) for Unix-like tools on Windows
 
+### Code Quality Tools (Optional)
+For maintaining consistent code style and catching potential issues:
+- **clang-format** - For automatic code formatting
+- **clang-tidy** - For static analysis and linting
+
+Install via LLVM package or standalone tools. See [CODE_QUALITY.md](CODE_QUALITY.md) for detailed setup instructions.
+
 ## Getting Started for New Contributors
 
 ### 1. Clone the Repository
@@ -182,6 +189,110 @@ File-Parser/
    ```bash
    ./dev.sh run
    ```
+
+### Code Quality
+
+This project includes code quality tools to maintain consistent style and catch potential issues:
+
+#### Quick Start with Helper Scripts (Recommended)
+
+Use the convenient wrapper scripts for easy code quality management:
+
+**Linux/macOS/Git Bash:**
+```bash
+# Format all source files
+./dev-quality.sh format
+
+# Check formatting without modifying files
+./dev-quality.sh check
+
+# Run clang-tidy static analysis
+./dev-quality.sh tidy
+
+# Run all code quality checks (format check + clang-tidy)
+./dev-quality.sh all
+
+# Show help and available commands
+./dev-quality.sh help
+```
+
+**Windows (Command Prompt):**
+```cmd
+REM Format all source files
+dev-quality.bat format
+
+REM Check formatting without modifying files
+dev-quality.bat check
+
+REM Run clang-tidy static analysis
+dev-quality.bat tidy
+
+REM Run all code quality checks
+dev-quality.bat all
+
+REM Show help
+dev-quality.bat help
+```
+
+**Windows (Git Bash/MSYS2):**
+```bash
+# Run batch file from bash
+cmd //c "dev-quality.bat format"
+cmd //c "dev-quality.bat all"
+
+# Or use bash script directly
+./dev-quality.sh format
+./dev-quality.sh all
+```
+
+#### Understanding the Commands
+
+- **`format`**: Automatically formats all source files according to the project's style guide
+- **`check`**: Verifies formatting without making changes (useful for CI/CD)
+- **`tidy`**: Runs static analysis to catch potential bugs and code quality issues
+- **`all`**: Runs both format checking and static analysis
+
+**Important**: The helper scripts automatically handle all configuration for you:
+- ✅ Check if clang-format and clang-tidy are installed
+- ✅ Configure the build directory with the required flags (`-DENABLE_CLANG_FORMAT=ON -DENABLE_CLANG_TIDY=ON`)
+- ✅ Handle cross-platform differences
+- ✅ **No manual setup required** - just run the scripts!
+
+#### Quick Start with Code Quality
+
+```bash
+# Format all source files
+./dev-quality.sh format     # Linux/macOS/Git Bash
+# or
+dev-quality.bat format      # Windows
+
+# Check code quality (formatting + static analysis)
+./dev-quality.sh all        # Linux/macOS/Git Bash
+# or
+dev-quality.bat all         # Windows
+```
+
+#### CMake Integration (Advanced/Optional)
+
+If you prefer to use CMake directly instead of the helper scripts, you can manually enable code quality tools:
+
+```bash
+# Configure with code quality tools (only needed if not using helper scripts)
+cmake -B build -DENABLE_CLANG_TIDY=ON -DENABLE_CLANG_FORMAT=ON
+
+# Build with automatic clang-tidy checks
+cmake --build build
+
+# Run specific code quality targets
+cmake --build build --target format        # Format code
+cmake --build build --target format-check  # Check formatting
+cmake --build build --target tidy          # Run clang-tidy
+cmake --build build --target code-quality  # Run all checks
+```
+
+**Note**: The helper scripts (`dev-quality.sh`/`dev-quality.bat`) are recommended as they handle the configuration automatically.
+
+See [CODE_QUALITY.md](CODE_QUALITY.md) for detailed configuration and usage instructions.
 
 ### Adding Dependencies
 
