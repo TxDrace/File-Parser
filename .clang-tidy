@@ -1,84 +1,107 @@
 # .clang-tidy configuration for File-Parser project
-# Tailored for C++11 project with reasonable checks
+# Tailored for C++11 project with reasonable checks for code quality and maintainability
+#
+# This configuration enables a comprehensive set of static analysis checks while
+# disabling overly pedantic or incompatible checks for a C++11 codebase.
+# The goal is to catch bugs, improve code quality, and enforce consistent style.
 
 # Define which checks to enable
-Checks: >
-  -*,
-  bugprone-*,
-  -bugprone-easily-swappable-parameters,
-  -bugprone-narrowing-conversions,
-  cert-*,
-  -cert-err58-cpp,
-  clang-analyzer-*,
-  cppcoreguidelines-*,
-  -cppcoreguidelines-avoid-magic-numbers,
-  -cppcoreguidelines-pro-bounds-pointer-arithmetic,
-  -cppcoreguidelines-pro-type-vararg,
-  -cppcoreguidelines-owning-memory,
-  google-*,
-  -google-readability-todo,
-  -google-runtime-references,
-  llvm-*,
-  -llvm-header-guard,
-  misc-*,
-  -misc-non-private-member-variables-in-classes,
-  modernize-*,
-  -modernize-use-trailing-return-type,
-  -modernize-avoid-c-arrays,
-  performance-*,
-  portability-*,
-  readability-*,
-  -readability-magic-numbers,
-  -readability-named-parameter,
-  -readability-function-cognitive-complexity
+# Format: use '*' for all checks in a category, '-' prefix to disable specific checks
+Checks: "-*,
+         bugprone-*,
+         -bugprone-easily-swappable-parameters,
+         -bugprone-narrowing-conversions,
+         cert-*,
+         -cert-err58-cpp,
+         clang-analyzer-*,
+         cppcoreguidelines-*,
+         -cppcoreguidelines-avoid-magic-numbers,
+         -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+         -cppcoreguidelines-pro-type-vararg,
+         -cppcoreguidelines-owning-memory,
+         google-*,
+         -google-readability-todo,
+         -google-runtime-references,
+         llvm-*,
+         -llvm-header-guard,
+         misc-*,
+         -misc-non-private-member-variables-in-classes,
+         modernize-*,
+         -modernize-use-trailing-return-type,
+         -modernize-avoid-c-arrays,
+         performance-*,
+         portability-*,
+         readability-*,
+         -readability-magic-numbers,
+         -readability-named-parameter,
+         -readability-function-cognitive-complexity"
 
-# Configuration for specific checks
+# Configuration for specific checks - fine-tune behavior of enabled checks
 CheckOptions:
+  # Naming convention enforcement - ensures consistent identifier naming
   - key: readability-identifier-naming.NamespaceCase
-    value: lower_case
+    value: lower_case                           # Namespaces: namespace my_namespace
   - key: readability-identifier-naming.ClassCase
-    value: CamelCase
+    value: CamelCase                            # Classes: class MyClass
   - key: readability-identifier-naming.StructCase
-    value: CamelCase
+    value: CamelCase                            # Structs: struct MyStruct
   - key: readability-identifier-naming.FunctionCase
-    value: camelBack
+    value: camelBack                            # Functions: void myFunction()
   - key: readability-identifier-naming.VariableCase
-    value: camelBack
+    value: camelBack                            # Variables: int myVariable
   - key: readability-identifier-naming.ParameterCase
-    value: camelBack
+    value: lower_case                           # Parameters: void func(int _my_param)
+  - key: readability-identifier-naming.ParameterPrefix
+    value: '_'                                  # Parameters must start with underscore
   - key: readability-identifier-naming.MemberCase
-    value: camelBack
+    value: camelBack                            # Member variables: int myMember
   - key: readability-identifier-naming.ConstantCase
-    value: UPPER_CASE
+    value: UPPER_CASE                           # Constants: const int MY_CONSTANT
   - key: readability-identifier-naming.EnumCase
-    value: CamelCase
+    value: CamelCase                            # Enums: enum MyEnum
   - key: readability-identifier-naming.EnumConstantCase
-    value: UPPER_CASE
+    value: UPPER_CASE                           # Enum values: MY_ENUM_VALUE
   - key: readability-identifier-naming.GlobalConstantCase
-    value: UPPER_CASE
+    value: UPPER_CASE                           # Global constants: extern const int GLOBAL_CONST
   - key: readability-identifier-naming.MacroDefinitionCase
-    value: UPPER_CASE
+    value: UPPER_CASE                           # Macros: #define MY_MACRO
+  
+  # Special member functions configuration
   - key: cppcoreguidelines-special-member-functions.AllowSoleDefaultDtor
-    value: true
+    value: true                                 # Allow classes with only default destructor
+  
+  # Loop conversion settings
   - key: modernize-loop-convert.MaxCopySize
-    value: 16
+    value: 16                                   # Convert to range-based for if copy size <= 16 bytes
   - key: modernize-loop-convert.MinConfidence
-    value: reasonable
+    value: reasonable                           # Only convert loops when reasonably confident
+  
+  # Nullptr modernization
   - key: modernize-use-nullptr.NullMacros
-    value: 'NULL'
+    value: 'NULL'                               # Replace NULL macro with nullptr
+  
+  # Performance settings
   - key: performance-for-range-copy.WarnOnAllAutoCopies
-    value: true
+    value: true                                 # Warn about unnecessary copies in range-based loops
+  
+  # Readability settings
   - key: readability-braces-around-statements.ShortStatementLines
-    value: 1
+    value: 1                                    # Require braces even for single-line statements
 
-# Header filter - include all project headers
+# Header filter - define which headers to analyze
+# Use regex pattern to include project headers while excluding system/third-party headers
 HeaderFilterRegex: '(include/.*|src/.*|tests/.*)'
 
-# Treat warnings as errors for CI/CD
+# Error handling - determine if warnings should be treated as errors
+# Empty string means warnings are warnings, not errors (good for development)
+# Set to specific checks or '*' for CI/CD pipelines to enforce stricter standards
 WarningsAsErrors: ''
 
-# Format style (should match .clang-format)
+# Code formatting integration
+# Use the .clang-format file in the same directory for consistent formatting
 FormatStyle: file
 
-# System headers to ignore
+# System headers handling
+# Don't analyze system headers to avoid noise from external libraries
+# Focus analysis on project code only
 SystemHeaders: false
