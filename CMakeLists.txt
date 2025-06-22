@@ -14,6 +14,8 @@ option(ENABLE_CLANG_FORMAT "Enable clang-format checks" OFF)
 
 set(CMAKE_CXX_STANDARD 11)
 
+
+
 # Set up clang-tidy if enabled
 if(ENABLE_CLANG_TIDY)
     find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
@@ -98,11 +100,18 @@ endif()
 
 # Add target to run clang-tidy manually (even if CMAKE_CXX_CLANG_TIDY is not set)
 if(CLANG_TIDY_EXE)
+    # Get all source files
+    file(GLOB_RECURSE TIDY_SOURCE_FILES
+        ${CMAKE_SOURCE_DIR}/src/*.cpp
+        ${CMAKE_SOURCE_DIR}/tests/*.cpp
+    )
+    
     add_custom_target(tidy
-        COMMAND ${CLANG_TIDY_EXE} ${CMAKE_SOURCE_DIR}/src/*.cpp ${CMAKE_SOURCE_DIR}/tests/*.cpp -- -I${CMAKE_SOURCE_DIR}/include
+        COMMAND ${CLANG_TIDY_EXE} ${TIDY_SOURCE_FILES} -- -I${CMAKE_SOURCE_DIR}/include -I${CMAKE_BINARY_DIR}/vcpkg_installed/${VCPKG_TARGET_TRIPLET}/include
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         COMMENT "Running clang-tidy checks"
         VERBATIM
+        DEPENDS dummy file_parser dummy_test
     )
 endif()
 

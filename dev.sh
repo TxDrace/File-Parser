@@ -3,8 +3,22 @@
 
 set -e
 
+# ============================================================================
+# INITIALIZATION AND CONFIGURATION
+# ============================================================================
+
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export CMAKE_TOOLCHAIN_FILE="$SCRIPT_DIR/vcpkg/scripts/buildsystems/vcpkg.cmake"
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+# ============================================================================
+# HELP FUNCTIONS
+# ============================================================================
 
 show_help() {
     echo "File Parser Development Script"
@@ -58,10 +72,11 @@ show_test_help() {
     echo "Usage: $0 test [subcommand]"
     echo ""
     echo "SUBCOMMANDS:"
+    echo "  run         Run tests"
     echo "  coverage    Run tests with coverage report"
     echo ""
     echo "Examples:"
-    echo "  $0 test"
+    echo "  $0 test run"
     echo "  $0 test coverage"
 }
 
@@ -71,11 +86,13 @@ show_quality_help() {
     echo ""
     echo "SUBCOMMANDS:"
     echo "  format      Format code using clang-format"
+    echo "  check       Check formatting without modifying files"
     echo "  lint        Run static analysis (clang-tidy)"
     echo "  all         Run all quality checks"
     echo ""
     echo "Examples:"
     echo "  $0 quality format"
+    echo "  $0 quality check"
     echo "  $0 quality lint"
     echo "  $0 quality all"
 }
@@ -92,6 +109,72 @@ show_utility_help() {
     echo "  $0 utility install"
     echo "  $0 utility version"
 }
+
+# ============================================================================
+# UTILITY FUNCTIONS
+# ============================================================================
+
+check_build_directory() {
+    local message="${1:-Build directory not found. Please run a build command first.}"
+    local use_colors="${2:-true}"
+    
+    if [ ! -d "build" ]; then
+        if [ "$use_colors" = "true" ]; then
+            echo -e "${RED}${message}${NC}"
+        else
+            echo "$message"
+        fi
+        return 1
+    fi
+    return 0
+}
+
+check_tools() {
+    local missing_tools=0
+    
+    if ! command -v clang-format &> /dev/null; then
+        echo -e "${RED}Error: clang-format not found${NC}"
+        missing_tools=1
+    fi
+    
+    if ! command -v clang-tidy &> /dev/null; then
+        echo -e "${RED}Error: clang-tidy not found${NC}"
+        missing_tools=1
+    fi
+    
+    if [ $missing_tools -eq 1 ]; then
+        echo -e "${YELLOW}Please install LLVM/Clang tools${NC}"
+        return 1
+    fi
+}
+
+show_version() {
+    echo "File Parser Development Script"
+    echo "Version: 1.0.0"
+    echo "CMake toolchain: $CMAKE_TOOLCHAIN_FILE"
+}
+
+install_executable() {
+    echo "Installing executable..."
+    
+    # Check if build directory exists
+    if ! check_build_directory; then
+        return 1
+    fi
+    
+    # Try to install, but provide helpful message if install target doesn't exist
+    if cmake --build build --target install 2>/dev/null; then
+        echo "Installation completed."
+    else
+        echo "No install target configured in the CMake project."
+        echo "You can manually copy the executable from the build directory."
+        return 1
+    fi
+}
+
+# ============================================================================
+# BUILD FUNCTIONS
+# ============================================================================
 
 clean_build() {
     echo "Cleaning build directory..."
@@ -117,8 +200,175 @@ configure_project() {
 
 build_project() {
     echo "Building project..."
-    cmake --build build
+    
+    # For Windows/Visual Studio generators, we need to specify the configuration at build time
+    local build_config="Debug"
+    if [ -f "build/CMakeCache.txt" ]; then
+        local cache_build_type=$(grep "CMAKE_BUILD_TYPE:" build/CMakeCache.txt | cut -d= -f2)
+        if [ -n "$cache_build_type" ]; then
+            build_config="$cache_build_type"
+        fi
+    fi
+    
+    if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]; then
+        echo "Building for configuration: $build_config"
+        cmake --build build --config "$build_config"
+    else
+        cmake --build build
+    fi
 }
+
+# ============================================================================
+# CODE QUALITY FUNCTIONS
+# ============================================================================
+
+check_quality_tools_enabled() {
+    local format_enabled="OFF"
+    local tidy_enabled="OFF"
+    
+    if [ -f "build/CMakeCache.txt" ]; then
+        if grep -q "ENABLE_CLANG_FORMAT:BOOL=ON" build/CMakeCache.txt; then
+            format_enabled="ON"
+        fi
+        if grep -q "ENABLE_CLANG_TIDY:BOOL=ON" build/CMakeCache.txt; then
+            tidy_enabled="ON"
+        fi
+    fi
+    
+    echo "$format_enabled $tidy_enabled"
+}
+
+ensure_quality_tools_enabled() {
+    echo "Checking code quality tools configuration..."
+    
+    # Check current settings
+    read format_enabled tidy_enabled <<< "$(check_quality_tools_enabled)"
+    
+    local needs_reconfigure=false
+    local cmake_args=()
+    
+    if [ "$format_enabled" != "ON" ]; then
+        echo "  Enabling clang-format..."
+        cmake_args+=("-DENABLE_CLANG_FORMAT=ON")
+        needs_reconfigure=true
+    else
+        echo "  clang-format already enabled"
+    fi
+    
+    if [ "$tidy_enabled" != "ON" ]; then
+        echo "  Enabling clang-tidy..."
+        cmake_args+=("-DENABLE_CLANG_TIDY=ON")
+        needs_reconfigure=true
+    else
+        echo "  clang-tidy already enabled"
+    fi
+    
+    if [ "$needs_reconfigure" = true ]; then
+        echo "Reconfiguring build with quality tools..."
+        cmake -B build "${cmake_args[@]}"
+        echo "Code quality tools enabled."
+    else
+        echo "Code quality tools already enabled."
+    fi
+}
+
+format_code() {
+    echo -e "${GREEN}Formatting code...${NC}"
+    if ! check_tools; then
+        return 1
+    fi
+    
+    # Ensure build directory is configured with code quality tools
+    if ! check_build_directory; then
+        return 1
+    fi
+    
+    # Ensure quality tools are enabled (this function checks and enables if needed)
+    ensure_quality_tools_enabled
+    
+    # Run code formatting using CMake target
+    echo -e "${GREEN}Running code formatting using CMake target...${NC}"
+    if cmake --build build --target format; then
+        echo -e "${GREEN}Code formatting completed.${NC}"
+    else
+        echo -e "${RED}CMake format target failed. Please check for compilation errors or missing dependencies.${NC}"
+        return 1
+    fi
+}
+
+check_format() {
+    echo -e "${GREEN}Checking code formatting...${NC}"
+    if ! check_tools; then
+        return 1
+    fi
+    
+    # Ensure build directory is configured with code quality tools
+    if ! check_build_directory; then
+        return 1
+    fi
+    
+    # Ensure quality tools are enabled (this function checks and enables if needed)
+    ensure_quality_tools_enabled
+    
+    # Run format check using CMake target
+    echo -e "${GREEN}Running format check using CMake target...${NC}"
+    if cmake --build build --target format-check; then
+        echo -e "${GREEN}Code formatting is correct${NC}"
+    else
+        echo -e "${RED}Code formatting issues found. Run '$0 quality format' to fix them.${NC}"
+        return 1
+    fi
+}
+
+lint_code() {
+    echo -e "${GREEN}Running static analysis...${NC}"
+    if ! check_tools; then
+        return 1
+    fi
+    
+    # Ensure build directory exists
+    if ! check_build_directory; then
+        return 1
+    fi
+    
+    # Ensure quality tools are enabled (this function checks and enables if needed)
+    ensure_quality_tools_enabled
+    
+    # Run clang-tidy target
+    echo -e "${GREEN}Running static analysis using CMake target...${NC}"
+    if cmake --build build --target tidy; then
+        echo -e "${GREEN}Static analysis completed.${NC}"
+    else
+        echo -e "${RED}CMake tidy target failed. Please check for compilation errors or missing dependencies.${NC}"
+        return 1
+    fi
+}
+
+run_quality_all() {
+    echo -e "${GREEN}Running all quality checks...${NC}"
+    
+    # Check for code quality tools
+    if ! check_tools; then
+        return 1
+    fi
+    
+    # Run available quality checks
+    echo -e "${GREEN}Running format check...${NC}"
+    if ! check_format; then
+        return 1
+    fi
+    
+    echo -e "${GREEN}Running static analysis...${NC}"
+    if ! lint_code; then
+        return 1
+    fi
+    
+    echo -e "${GREEN}All quality checks completed successfully.${NC}"
+}
+
+# ============================================================================
+# TEST AND EXECUTION FUNCTIONS
+# ============================================================================
 
 run_tests() {
     echo "Running tests..."
@@ -134,11 +384,35 @@ run_executable() {
     
     local executable_path=""
     if [[ "$OSTYPE" == "msys" || "$OSTYPE" == "win32" ]]; then
-        executable_path="./build/Debug/file_parser.exe"
+        # On Windows with Visual Studio generator, try to find the executable
+        # in the most likely locations (Debug first, then Release)
+        local possible_paths=(
+            "./build/Debug/file_parser.exe"
+            "./build/Release/file_parser.exe"
+            "./build/RelWithDebInfo/file_parser.exe"
+            "./build/MinSizeRel/file_parser.exe"
+        )
+        
+        for path in "${possible_paths[@]}"; do
+            if [ -f "$path" ]; then
+                executable_path="$path"
+                break
+            fi
+        done
+        
+        if [ -z "$executable_path" ]; then
+            echo "Executable not found in any of the expected locations:"
+            for path in "${possible_paths[@]}"; do
+                echo "  $path"
+            done
+            echo "Please run a build command first."
+            return 1
+        fi
     else
         executable_path="./build/file_parser"
     fi
     
+    echo "Using executable: $executable_path"
     if [ -f "$executable_path" ]; then
         "$executable_path"
     else
@@ -154,76 +428,10 @@ run_coverage() {
     echo "Coverage report generation not implemented yet"
 }
 
-format_code() {
-    echo "Formatting code..."
-    if command -v clang-format &> /dev/null; then
-        find src include tests -name "*.cpp" -o -name "*.h" | xargs clang-format -i
-        echo "Code formatting completed."
-    else
-        echo "clang-format not found. Please install clang-format."
-    fi
-}
+# ============================================================================
+# COMMAND HANDLERS
+# ============================================================================
 
-lint_code() {
-    echo "Running static analysis..."
-    if command -v clang-tidy &> /dev/null; then
-        # Check if build directory exists and has been configured
-        if [ ! -d "build" ]; then
-            echo "Build directory not found. Please run 'build' first."
-            return 1
-        fi
-        
-        # Try to run clang-tidy target, but fall back to manual clang-tidy if target doesn't exist
-        if cmake --build build --target tidy 2>/dev/null; then
-            echo "Static analysis completed."
-        else
-            echo "No tidy target found in build system. Running clang-tidy manually..."
-            if [ -f "compile_commands.json" ] || [ -f "build/compile_commands.json" ]; then
-                find src include -name "*.cpp" -o -name "*.h" | head -5 | xargs clang-tidy
-                echo "Manual static analysis completed."
-            else
-                echo "No compile_commands.json found. Please ensure your build system generates it."
-                return 1
-            fi
-        fi
-    else
-        echo "clang-tidy not found. Please install clang-tidy."
-        return 1
-    fi
-}
-
-run_quality_all() {
-    echo "Running all quality checks..."
-    format_code
-    lint_code
-}
-
-install_executable() {
-    echo "Installing executable..."
-    
-    # Check if build directory exists
-    if [ ! -d "build" ]; then
-        echo "Build directory not found. Please run 'build' first."
-        return 1
-    fi
-    
-    # Try to install, but provide helpful message if install target doesn't exist
-    if cmake --build build --target install 2>/dev/null; then
-        echo "Installation completed."
-    else
-        echo "No install target configured in the CMake project."
-        echo "You can manually copy the executable from the build directory."
-        return 1
-    fi
-}
-
-show_version() {
-    echo "File Parser Development Script"
-    echo "Version: 1.0.0"
-    echo "CMake toolchain: $CMAKE_TOOLCHAIN_FILE"
-}
-
-# Handle grouped commands
 handle_build_command() {
     local subcommand="$1"
     local build_type="$BUILD_TYPE"
@@ -290,11 +498,20 @@ handle_test_command() {
             show_test_help
             exit 0
             ;;
+        run)
+            run_tests
+            ;;
         coverage)
             run_coverage
             ;;
-        ""|*)
-            run_tests
+        "")
+            show_test_help
+            exit 0
+            ;;
+        *)
+            echo "Unknown test command: $subcommand"
+            show_test_help
+            exit 1
             ;;
     esac
 }
@@ -310,6 +527,9 @@ handle_quality_command() {
         format)
             format_code
             ;;
+        check)
+            check_format
+            ;;
         lint)
             lint_code
             ;;
@@ -317,10 +537,11 @@ handle_quality_command() {
             run_quality_all
             ;;
         "")
-            run_quality_all
+            show_quality_help
+            exit 0
             ;;
         *)
-            echo "Unknown quality command: $subcommand"
+            echo -e "${RED}Unknown quality command: $subcommand${NC}"
             show_quality_help
             exit 1
             ;;
@@ -341,6 +562,10 @@ handle_utility_command() {
         version)
             show_version
             ;;
+        "")
+            show_utility_help
+            exit 0
+            ;;
         *)
             echo "Unknown utility command: $subcommand"
             show_utility_help
@@ -348,6 +573,10 @@ handle_utility_command() {
             ;;
     esac
 }
+
+# ============================================================================
+# MAIN SCRIPT EXECUTION
+# ============================================================================
 
 # Parse command line arguments
 BUILD_TYPE="Debug"
