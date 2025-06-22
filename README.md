@@ -64,39 +64,28 @@ cd vcpkg
 
 You have several options to build the project:
 
-#### Option A: Using Build Scripts (Recommended for beginners)
-
-**On Windows:**
-```batch
-.\build.bat
-```
-
-**On Linux/macOS/Git Bash:**
-```bash
-./build.sh
-```
-
-#### Option B: Using Development Script (Advanced users)
+#### Option A: Using Development Script (Recommended)
 
 ```bash
 # Build in debug mode (default)
-./dev.sh build
+./dev.sh build debug
 
 # Build in release mode
-./dev.sh release
+./dev.sh build release
 
 # Build with shared libraries
-./dev.sh shared
+./dev.sh build shared
 
 # Clean and rebuild
-./dev.sh clean
-./dev.sh build
+./dev.sh build clean
+./dev.sh build debug
 
 # See all available options
 ./dev.sh help
+./dev.sh build help
 ```
 
-#### Option C: Manual CMake Build
+#### Option B: Manual CMake Build
 
 ```bash
 # Configure the project
@@ -162,10 +151,8 @@ File-Parser/
 ├── vcpkg/            # Dependency manager (submodule)
 ├── CMakeLists.txt    # CMake configuration
 ├── vcpkg.json        # Dependency specification
-├── build.bat         # Windows build script
-├── build.sh          # Cross-platform build script
 ├── COMPILER_SUPPORT.md    # Compiler verification info
-└── dev.sh            # Development script with options
+└── dev.sh            # Development script with all functionality
 ```
 
 ## Development Workflow
@@ -181,8 +168,8 @@ File-Parser/
 
 3. **Build and test:**
    ```bash
-   ./dev.sh build
-   ./dev.sh test
+   ./dev.sh build debug
+   ./dev.sh test run
    ```
 
 4. **Run the application to verify:**
@@ -192,84 +179,48 @@ File-Parser/
 
 ### Code Quality
 
-This project includes code quality tools to maintain consistent style and catch potential issues:
+This project includes code quality tools to maintain consistent style and catch potential issues. All code quality functionality is integrated into the main development script.
 
-#### Quick Start with Helper Scripts (Recommended)
+#### Using the Development Script (Recommended)
 
-Use the convenient wrapper scripts for easy code quality management:
-
-**Linux/macOS/Git Bash:**
 ```bash
 # Format all source files
-./dev-quality.sh format
+./dev.sh quality format
 
 # Check formatting without modifying files
-./dev-quality.sh check
+./dev.sh quality check
 
 # Run clang-tidy static analysis
-./dev-quality.sh tidy
+./dev.sh quality lint
 
 # Run all code quality checks (format check + clang-tidy)
-./dev-quality.sh all
+./dev.sh quality all
 
-# Show help and available commands
-./dev-quality.sh help
-```
-
-**Windows (Command Prompt):**
-```cmd
-REM Format all source files
-dev-quality.bat format
-
-REM Check formatting without modifying files
-dev-quality.bat check
-
-REM Run clang-tidy static analysis
-dev-quality.bat tidy
-
-REM Run all code quality checks
-dev-quality.bat all
-
-REM Show help
-dev-quality.bat help
-```
-
-**Windows (Git Bash/MSYS2):**
-```bash
-# Run batch file from bash
-cmd //c "dev-quality.bat format"
-cmd //c "dev-quality.bat all"
-
-# Or use bash script directly
-./dev-quality.sh format
-./dev-quality.sh all
+# Show help for quality commands
+./dev.sh quality help
 ```
 
 #### Understanding the Commands
 
 - **`format`**: Automatically formats all source files according to the project's style guide
 - **`check`**: Verifies formatting without making changes (useful for CI/CD)
-- **`tidy`**: Runs static analysis to catch potential bugs and code quality issues
+- **`lint`**: Runs static analysis to catch potential bugs and code quality issues
 - **`all`**: Runs both format checking and static analysis
 
-**Important**: The helper scripts automatically handle all configuration for you:
+**Important**: The development script automatically handles all configuration for you:
 - ✅ Check if clang-format and clang-tidy are installed
 - ✅ Configure the build directory with the required flags (`-DENABLE_CLANG_FORMAT=ON -DENABLE_CLANG_TIDY=ON`)
 - ✅ Handle cross-platform differences
-- ✅ **No manual setup required** - just run the scripts!
+- ✅ **No manual setup required** - just run the commands!
 
 #### Quick Start with Code Quality
 
 ```bash
 # Format all source files
-./dev-quality.sh format     # Linux/macOS/Git Bash
-# or
-dev-quality.bat format      # Windows
+./dev.sh quality format
 
 # Check code quality (formatting + static analysis)
-./dev-quality.sh all        # Linux/macOS/Git Bash
-# or
-dev-quality.bat all         # Windows
+./dev.sh quality all
 ```
 
 #### CMake Integration (Advanced/Optional)
@@ -287,10 +238,9 @@ cmake --build build
 cmake --build build --target format        # Format code
 cmake --build build --target format-check  # Check formatting
 cmake --build build --target tidy          # Run clang-tidy
-cmake --build build --target code-quality  # Run all checks
 ```
 
-**Note**: The helper scripts (`dev-quality.sh`/`dev-quality.bat`) are recommended as they handle the configuration automatically.
+**Note**: The development script (`./dev.sh quality`) is recommended as it handles the configuration automatically.
 
 See [CODE_QUALITY.md](CODE_QUALITY.md) for detailed configuration and usage instructions.
 
@@ -321,15 +271,15 @@ To add new C++ dependencies:
 
 3. **Rebuild the project:**
    ```bash
-   ./dev.sh clean
-   ./dev.sh build
+   ./dev.sh build clean
+   ./dev.sh build debug
    ```
 
 ## Build Options
 
-- **Shared Libraries**: Use `-DBUILD_SHARED=ON` or `./dev.sh shared`
-- **Debug Build**: Default mode, or use `./dev.sh debug`
-- **Release Build**: Use `./dev.sh release`
+- **Shared Libraries**: Use `./dev.sh build shared`
+- **Debug Build**: Default mode, or use `./dev.sh build debug`
+- **Release Build**: Use `./dev.sh build release`
 
 ## Compiler Support
 
@@ -356,7 +306,7 @@ For detailed compiler information and build configurations, see `COMPILER_SUPPOR
 - Check the build logs in the `build/` directory
 - Run `./dev.sh help` for development script options
 - Ensure all prerequisites are installed
-- Try a clean build: `./dev.sh clean && ./dev.sh build`
+- Try a clean build: `./dev.sh build clean && ./dev.sh build debug`
 
 ## Running the Application
 

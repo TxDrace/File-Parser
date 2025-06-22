@@ -1,71 +1,59 @@
 # Build Scripts
 
-This project includes several automated build scripts to make development easier.
+This project uses a unified development script to handle all build operations.
 
 ## Quick Start
 
-### Windows (Command Prompt)
-```cmd
-build.bat
-```
-
-### Linux/macOS/Windows (Bash)
+### Cross-platform (Recommended)
 ```bash
-./build.sh
+./dev.sh build debug
 ```
 
-## Available Scripts
+## Available Script
 
-### 1. `build.bat` (Windows)
-Simple Windows batch script that:
-- Sets up vcpkg toolchain
-- Cleans previous build
-- Configures with CMake
-- Builds the project
-- Runs tests
-
-### 2. `build.sh` (Cross-platform)
-Cross-platform bash script that:
-- Auto-detects operating system
-- Sets up vcpkg toolchain
-- Builds and tests the project
-
-### 3. `dev.sh` (Advanced Development)
+### `dev.sh` (Unified Development Script)
 Feature-rich development script with multiple options:
 
 ```bash
 # Basic build
-./dev.sh
+./dev.sh build debug
 
 # Clean and build
-./dev.sh clean build
+./dev.sh build clean
+./dev.sh build debug
 
 # Release build
-./dev.sh release
+./dev.sh build release
 
 # Build with shared libraries
-./dev.sh shared
+./dev.sh build shared
 
-# Run tests only
-./dev.sh test
+# Run tests
+./dev.sh test run
 
 # Run the executable
 ./dev.sh run
 
 # Show help
 ./dev.sh help
+
+# Show build options
+./dev.sh build help
+
+# Quality checks
+./dev.sh quality all
 ```
 
 ## How It Works
 
-1. **vcpkg Integration**: Scripts automatically set the `CMAKE_TOOLCHAIN_FILE` environment variable
+1. **vcpkg Integration**: The script automatically sets the `CMAKE_TOOLCHAIN_FILE` environment variable
 2. **Manifest Mode**: Dependencies are read from `vcpkg.json` and installed automatically
-3. **Cross-platform**: Scripts work on Windows, Linux, and macOS
-4. **Error Handling**: Scripts exit on errors and provide clear feedback
+3. **Cross-platform**: Script works on Windows, Linux, and macOS
+4. **Error Handling**: Script exits on errors and provides clear feedback
 
 ## Dependencies
 
-The scripts will automatically install dependencies listed in `vcpkg.json`:
+The script will automatically install dependencies listed in `vcpkg.json`:
 - zlib (compression library)
 
 ## Output
@@ -91,13 +79,13 @@ If you encounter issues:
 ### Basic Development
 ```bash
 # First time setup
-./build.sh
+./dev.sh build debug
 
 # After making changes
-./dev.sh
+./dev.sh build debug
 
 # Run tests
-./dev.sh test
+./dev.sh test run
 
 # Run the program
 ./dev.sh run
@@ -105,7 +93,9 @@ If you encounter issues:
 
 ### Release Build
 ```bash
-./dev.sh clean release build test
+./dev.sh build clean
+./dev.sh build release
+./dev.sh test run
 ```
 
-This will clean, configure for release, build, and test in one command.
+This will clean, configure for release, build, and test.

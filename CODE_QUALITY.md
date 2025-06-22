@@ -25,67 +25,33 @@ clang-tidy --version
 
 ## Usage
 
-### Quick Start with Helper Scripts (Recommended)
+### Quick Start with Development Script (Recommended)
 
-This project includes convenient wrapper scripts that automatically handle the build configuration and tool execution:
+This project includes a unified development script that handles all code quality functionality:
 
-#### Linux/macOS/Git Bash Users
 ```bash
 # Format all source files
-./dev-quality.sh format
+./dev.sh quality format
 
 # Check formatting without modifying files
-./dev-quality.sh check
+./dev.sh quality check
 
 # Run clang-tidy static analysis
-./dev-quality.sh tidy
+./dev.sh quality lint
 
 # Run all code quality checks (format check + clang-tidy)
-./dev-quality.sh all
+./dev.sh quality all
 
 # Show help and available commands
-./dev-quality.sh help
+./dev.sh quality help
 ```
 
-#### Windows Users (Command Prompt)
-```cmd
-REM Format all source files
-dev-quality.bat format
-
-REM Check formatting without modifying files
-dev-quality.bat check
-
-REM Run clang-tidy static analysis
-dev-quality.bat tidy
-
-REM Run all code quality checks (format check + clang-tidy)
-dev-quality.bat all
-
-REM Show help and available commands
-dev-quality.bat help
-```
-
-#### Windows Users (Git Bash/MSYS2)
-```bash
-# Alternative: Run Windows batch file from bash
-cmd //c "dev-quality.bat format"
-cmd //c "dev-quality.bat check"
-cmd //c "dev-quality.bat tidy"
-cmd //c "dev-quality.bat all"
-
-# Or use the bash script directly
-./dev-quality.sh format
-./dev-quality.sh check
-./dev-quality.sh tidy
-./dev-quality.sh all
-```
-
-**Note**: The helper scripts automatically:
+**Note**: The development script automatically:
 - Check if required tools are installed
 - Configure the build directory with proper flags if needed (`-DENABLE_CLANG_FORMAT=ON -DENABLE_CLANG_TIDY=ON`)
 - Handle cross-platform differences
 - Provide colored output and clear error messages
-- **No manual CMake configuration required** - just run the scripts!
+- **No manual CMake configuration required** - just run the commands!
 
 ### During Development
 
@@ -108,9 +74,6 @@ cmake --build build --target format-check
 
 # Run clang-tidy manually
 cmake --build build --target tidy
-
-# Run all code quality checks
-cmake --build build --target code-quality
 ```
 
 ### CI/CD Integration
@@ -124,8 +87,9 @@ cmake -B build -DENABLE_CLANG_FORMAT=ON
 # Build
 cmake --build build
 
-# Run code quality checks
-cmake --build build --target code-quality
+# Run individual code quality checks
+cmake --build build --target format-check
+cmake --build build --target tidy
 ```
 
 ### Individual Tool Usage
@@ -230,17 +194,17 @@ You can modify the configuration files to match your team's preferences:
 ### Before Committing Changes
 ```bash
 # Format your code and check for issues
-./dev-quality.sh all
+./dev.sh quality all
 ```
 This ensures your code follows the project's style guidelines and catches potential issues before they reach the repository.
 
 ### During Development
 ```bash
 # Quick format while coding
-./dev-quality.sh format
+./dev.sh quality format
 
 # Check if your changes introduced any new issues
-./dev-quality.sh tidy
+./dev.sh quality lint
 ```
 
 ### Setting Up Pre-commit Hooks
@@ -249,7 +213,7 @@ You can integrate these scripts into your Git workflow:
 ```bash
 # Create a pre-commit hook (Linux/macOS/Git Bash)
 echo '#!/bin/bash' > .git/hooks/pre-commit
-echo './dev-quality.sh check' >> .git/hooks/pre-commit
+echo './dev.sh quality check' >> .git/hooks/pre-commit
 chmod +x .git/hooks/pre-commit
 ```
 
@@ -258,13 +222,13 @@ For automated builds, use the `check` command to ensure code quality:
 
 ```bash
 # In your CI script
-./dev-quality.sh check  # Fails if formatting is incorrect
-./dev-quality.sh tidy   # Fails if code quality issues are found
+./dev.sh quality check  # Fails if formatting is incorrect
+./dev.sh quality lint   # Fails if code quality issues are found
 ```
 
 ### Fixing Common Issues
 
-When `dev-quality.sh tidy` reports warnings:
+When `./dev.sh quality lint` reports warnings:
 - **Naming issues**: Follow the project's naming conventions (see Configuration Details section)
 - **Performance warnings**: Consider the suggested optimizations
 - **Modernization suggestions**: Update code to use modern C++ features when appropriate
