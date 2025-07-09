@@ -34,7 +34,7 @@ if(ENABLE_CLANG_TIDY)
     find_program(CLANG_TIDY_EXE NAMES "clang-tidy")
     if(CLANG_TIDY_EXE)
         message(STATUS "Found clang-tidy: ${CLANG_TIDY_EXE}")
-        # Enable clang-tidy for all targets automatically
+        # Tích hợp clang-tidy vào quá trình build, trước khi mỗi file cpp biên dịch, clang-tidy sẽ được chạy để phân tích
         set(CMAKE_CXX_CLANG_TIDY "${CLANG_TIDY_EXE}")
     else()
         message(WARNING "clang-tidy requested but not found")

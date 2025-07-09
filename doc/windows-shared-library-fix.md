@@ -73,8 +73,6 @@ The solution involves adding one crucial property to the CMake configuration:
 ```cmake
 # Handle Windows DLL exports properly
 if(BUILD_SHARED AND WIN32)
-    target_compile_definitions(dummy PRIVATE DUMMY_EXPORTS)
-    target_compile_definitions(dummy INTERFACE DUMMY_IMPORTS)
     set_target_properties(dummy PROPERTIES
         WINDOWS_EXPORT_ALL_SYMBOLS ON  # ← This is the key fix
     )
