@@ -4,21 +4,29 @@ General:
 
 Project Structure:
 - COMPILER_SUPPORT.md
+- CODE_QUALITY.md
+- BUILD.md
 - AGENTS.md
+- CONTRIBUTING.md
 - README.md
 - CMakeLists.txt
+- dev.sh
+- vcpkg.json
+- doc/
+    - windows-build-configuration-fix.md
+    - windows-shared-library-fix.md
 - include/
-    - dummy.h
     - compression.h
+    - dummy.h
 - src/
-    - main.cpp
-    - dummy.cpp
     - compression.cpp
+    - dummy.cpp
+    - main.cpp
 - tests/
     - dummy_test.cpp
+- vcpkg/
 
 Naming Convention:
 - For variable: use snake_case
 - For function parameters: use _snake_case_with_hyperscore_before
 - For function name: user camelCase()
-
