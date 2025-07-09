@@ -1,0 +1,99 @@
+# .clang-format configuration for File-Parser project
+# Based on LLVM style with custom modifications for C++11 compatibility
+#
+# This configuration ensures consistent code formatting across the project
+# and follows modern C++ best practices while maintaining C++11 compatibility
+
+# Base style - LLVM provides a good balance of readability and compactness
+BasedOnStyle: LLVM
+
+# Basic formatting options
+IndentWidth: 4              # Use 4 spaces for indentation (more readable than 2)
+TabWidth: 4                 # Tab width matches indent width for consistency
+UseTab: Never               # Always use spaces instead of tabs for portability
+ColumnLimit: 100            # Maximum line length - allows for modern wide screens
+
+# C++ specific settings
+Standard: c++11             # Target C++11 standard for this project
+Cpp11BracedListStyle: true  # Use C++11 style braced list formatting: {1, 2, 3}
+
+# Indentation settings
+AccessModifierOffset: -2           # Outdent access modifiers (public:, private:) by 2 spaces
+IndentCaseLabels: true             # Indent case labels in switch statements
+IndentWrappedFunctionNames: false  # Don't add extra indent for wrapped function names
+IndentPPDirectives: None           # Don't indent preprocessor directives (#include, #define)
+
+# Spacing rules - control whitespace placement
+SpaceAfterCStyleCast: false              # No space after C-style casts: (int)x not (int) x
+SpaceAfterTemplateKeyword: true          # Space after template keyword: template <typename T>
+SpaceBeforeAssignmentOperators: true     # Space before assignment: x = 5 not x= 5
+SpaceBeforeParens: ControlStatements     # Space before parentheses only in control statements: if (x)
+SpaceInEmptyParentheses: false           # No space in empty parentheses: func() not func( )
+SpacesBeforeTrailingComments: 2          # Two spaces before trailing comments: int x;  // comment
+SpacesInAngles: false                    # No spaces in angle brackets: <int> not < int >
+SpacesInCStyleCastParentheses: false     # No spaces in C-style cast parentheses: (int)x
+SpacesInContainerLiterals: true          # Spaces in container literals: {1, 2, 3}
+SpacesInParentheses: false               # No spaces inside parentheses: (x) not ( x )
+SpacesInSquareBrackets: false            # No spaces in square brackets: arr[0] not arr[ 0 ]
+
+# Alignment settings - control how code elements are aligned
+AlignAfterOpenBracket: Align                # Align parameters after opening bracket
+AlignConsecutiveAssignments: false          # Don't align consecutive assignments (can be noisy)
+AlignConsecutiveDeclarations: false         # Don't align consecutive declarations
+AlignEscapedNewlines: Right                 # Align escaped newlines to the right
+AlignOperands: true                         # Align operands in binary expressions
+AlignTrailingComments: true                 # Align trailing comments in consecutive lines
+
+# Line breaking rules - control when and how lines are broken
+AllowAllParametersOfDeclarationOnNextLine: true    # Allow function parameters on next line
+AllowShortBlocksOnASingleLine: false               # Don't allow short blocks on single line
+AllowShortCaseLabelsOnASingleLine: false           # Case labels should be on separate lines
+AllowShortFunctionsOnASingleLine: All              # Allow short functions on single line
+AllowShortIfStatementsOnASingleLine: false         # If statements should span multiple lines
+AllowShortLoopsOnASingleLine: false                # Loops should span multiple lines
+AlwaysBreakAfterDefinitionReturnType: None         # Don't break after function definition return type
+AlwaysBreakAfterReturnType: None                   # Don't break after function declaration return type
+AlwaysBreakBeforeMultilineStrings: false           # Don't always break before multiline strings
+AlwaysBreakTemplateDeclarations: MultiLine         # Break template declarations when multiline
+BreakBeforeBinaryOperators: None                   # Break after binary operators, not before
+BreakBeforeBraces: Attach                          # Attach braces to previous line (K&R style)
+BreakBeforeTernaryOperators: true                  # Break before ternary operators
+BreakConstructorInitializers: BeforeColon          # Break constructor initializers before colon
+BreakInheritanceList: BeforeColon                  # Break inheritance list before colon
+BreakStringLiterals: true                          # Allow breaking string literals
+
+# Constructor initializer formatting
+ConstructorInitializerAllOnOneLineOrOnePerLine: false  # Allow mixed formatting for constructor initializers
+ConstructorInitializerIndentWidth: 4                   # Use 4-space indentation for constructor initializers
+
+# Include directive handling
+IncludeBlocks: Preserve        # Preserve existing include blocks (don't regroup)
+SortIncludes: true             # Sort includes alphabetically within each block
+SortUsingDeclarations: true    # Sort using declarations alphabetically
+
+# Miscellaneous formatting options
+BinPackArguments: true                              # Pack function arguments tightly
+BinPackParameters: true                             # Pack function parameters tightly
+CompactNamespaces: false                            # Don't compact nested namespaces
+ContinuationIndentWidth: 4                          # Indent width for line continuations
+DerivePointerAlignment: false                       # Use explicit pointer alignment setting
+DisableFormat: false                                # Enable formatting (don't disable)
+ExperimentalAutoDetectBinPacking: false             # Don't auto-detect bin packing
+FixNamespaceComments: true                          # Add/fix namespace closing comments
+ForEachMacros: ['foreach', 'Q_FOREACH', 'BOOST_FOREACH']  # Treat these as foreach macros
+KeepEmptyLinesAtTheStartOfBlocks: true              # Keep empty lines at start of blocks
+MacroBlockBegin: ''                                 # No special macro block begin
+MacroBlockEnd: ''                                   # No special macro block end
+MaxEmptyLinesToKeep: 1                              # Keep at most 1 consecutive empty line
+NamespaceIndentation: None                          # Don't indent namespace contents
+PenaltyBreakAssignment: 2                           # Small penalty for breaking assignments
+PenaltyBreakBeforeFirstCallParameter: 1            # Small penalty for breaking before first parameter
+PenaltyBreakComment: 300                            # High penalty for breaking comments
+PenaltyBreakFirstLessLess: 120                      # Penalty for breaking << operators
+PenaltyBreakString: 1000                            # High penalty for breaking strings
+PenaltyExcessCharacter: 1000000                     # Very high penalty for exceeding column limit
+PenaltyReturnTypeOnItsOwnLine: 200                  # Penalty for putting return type on separate line
+PointerAlignment: Left                              # Align pointers to the left: int* ptr
+ReflowComments: true                                # Reflow comments to fit within column limit
+SpaceAfterLogicalNot: false                         # No space after logical not: !condition
+SpaceBeforeRangeBasedForLoopColon: true             # Space before colon in range-based for loops
