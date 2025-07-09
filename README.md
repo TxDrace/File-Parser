@@ -72,3 +72,17 @@ After successful build:
 ```
 
 The application demonstrates basic file compression/decompression functionality using zlib.
+
+## Running Tests
+
+Run the unit tests to verify the build:
+
+```bash
+./dev.sh test run
+```
+
+You can also execute the tests directly with CTest:
+
+```bash
+ctest --test-dir build
+```

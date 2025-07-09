@@ -5,19 +5,23 @@ General:
 Project Structure:
 - docs/
     - README.md
+    - bugs/
+        - README.md
+        - windows-build-configuration-fix.md
+        - windows-shared-library-fix.md
     - inside/
         - BUILD.md
         - CODE_QUALITY.md
         - COMPILER_SUPPORT.md
+    - task-reports/
+        - template.md
+        - issue-3-unit-testing-framework.md
 - AGENTS.md
 - CONTRIBUTING.md
 - README.md
 - CMakeLists.txt
 - dev.sh
 - vcpkg.json
-- doc/
-    - windows-build-configuration-fix.md
-    - windows-shared-library-fix.md
 - include/
     - compression.h
     - dummy.h
@@ -27,6 +31,7 @@ Project Structure:
     - main.cpp
 - tests/
     - dummy_test.cpp
+    - sample_test.cpp
 - vcpkg/
 
 Naming Convention:

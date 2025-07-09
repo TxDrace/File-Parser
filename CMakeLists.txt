@@ -113,6 +113,7 @@ find_package(GTest CONFIG REQUIRED)
 # Create test executable
 add_executable(dummy_test
     tests/dummy_test.cpp
+    tests/sample_test.cpp
 )
 
 # Link test executable with Google Test and the library
