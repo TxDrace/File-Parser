@@ -16,12 +16,16 @@ Project Structure:
     - task-reports/
         - template.md
         - issue-3-unit-testing-framework.md
+        - issue-6-github-actions-ci.md
 - AGENTS.md
 - CONTRIBUTING.md
 - README.md
 - CMakeLists.txt
 - dev.sh
 - vcpkg.json
+- .github/
+    - workflows/
+        - ci.yml
 - include/
     - compression.h
     - dummy.h
