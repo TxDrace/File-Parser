@@ -2,7 +2,7 @@
 
 This project provides a simple C++ skeleton built with CMake. A small dummy library is included to verify the toolchain. zlib is used as a third-party dependency.
 
-For prerequisites, setup instructions, and the full development workflow, see [CONTRIBUTING.md](CONTRIBUTING.md).
+For prerequisites, setup instructions, and the full development workflow, see [CONTRIBUTING.md](CONTRIBUTING.md). Additional documentation is available in [docs/README.md](docs/README.md).
 
 ## Project Structure
 
@@ -10,10 +10,20 @@ For prerequisites, setup instructions, and the full development workflow, see [C
 File-Parser/
 ├── docs/              # Additional documentation
 │   ├── README.md
-│   └── inside/
-│       ├── BUILD.md
-│       ├── CODE_QUALITY.md
-│       └── COMPILER_SUPPORT.md
+│   ├── bugs/
+│   │   ├── README.md
+│   │   ├── windows-build-configuration-fix.md
+│   │   └── windows-shared-library-fix.md
+│   ├── inside/
+│   │   ├── README.md
+│   │   ├── BUILD.md
+│   │   ├── CODE_QUALITY.md
+│   │   └── COMPILER_SUPPORT.md
+│   └── task-reports/
+│       ├── README.md
+│       ├── template.md
+│       ├── issue-3-unit-testing-framework.md
+│       └── issue-6-github-actions-ci.md
 ├── include/           # Header files
 │   ├── compression.h
 │   └── dummy.h
@@ -22,7 +32,8 @@ File-Parser/
 │   ├── dummy.cpp
 │   └── main.cpp
 ├── tests/            # Test files
-│   └── dummy_test.cpp
+│   ├── dummy_test.cpp
+│   └── sample_test.cpp
 ├── build/            # Build artifacts (generated)
 ├── vcpkg/            # Dependency manager (submodule)
 ├── CMakeLists.txt    # CMake configuration
@@ -43,7 +54,7 @@ This project has been successfully built with:
 - **Clang 19.1.5** (provided through Visual Studio 2022) on Windows 10
 - **GCC 14.2.0** (MSYS2) available on Windows 10
 
-The project uses Visual Studio 2022 generator by default. **To test different compilers**, use VS Code's `CMake: Select a Kit` command to switch between MSVC, Clang-cl, and GCC options.
+The project uses Visual Studio 2022 generator by default. **To test different compilers**, use VS Code's `CMake: Select a Kit` command to switch between MSVC, clang-cl, and GCC options.
 
 For detailed compiler information and build configurations, see `docs/inside/COMPILER_SUPPORT.md`.
 
@@ -53,7 +64,7 @@ For detailed compiler information and build configurations, see `docs/inside/COM
 
 1. **vcpkg not found**: Make sure you've initialized submodules with `git submodule update --init --recursive` and bootstrapped vcpkg
 2. **CMake errors**: Ensure CMake version is 3.10 or higher
-3. **Compiler errors**: Verify your compiler supports C++11
+3. **Compiler errors**: Verify your compiler supports C++23
 4. **Permission errors** (Linux/macOS): Make scripts executable with `chmod +x *.sh`
 
 ### Getting Help

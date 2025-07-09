@@ -1,9 +1,7 @@
-# Documentation Index
+# File Parser Official Documentation
 
-This folder organizes project documentation.
+This folder organizes project documentation. Each subdirectory contains a README that lists its contents.
 
-- **[Build Guide](inside/BUILD.md)** - How to build the project using `dev.sh`.
-- **[Code Quality Tools](inside/CODE_QUALITY.md)** - Formatting and linting setup.
-- **[Compiler Support](inside/COMPILER_SUPPORT.md)** - Tested compilers and configuration.
+- **[Internal Guides](inside/README.md)** - Build instructions and development notes.
 - **[Bug Fix Guides](bugs/README.md)** - Workarounds for known issues.
-
+- **[Task Reports](task-reports/README.md)** - Reports for completed issues.

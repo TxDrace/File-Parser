@@ -1,8 +1,8 @@
 # .clang-tidy configuration for File-Parser project
-# Tailored for C++11 project with reasonable checks for code quality and maintainability
+# Tailored for C++23 project with reasonable checks for code quality and maintainability
 #
 # This configuration enables a comprehensive set of static analysis checks while
-# disabling overly pedantic or incompatible checks for a C++11 codebase.
+# disabling overly pedantic or incompatible checks for a C++23 codebase.
 # The goal is to catch bugs, improve code quality, and enforce consistent style.
 
 # Define which checks to enable

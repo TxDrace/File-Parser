@@ -121,7 +121,7 @@ clang-tidy src/*.cpp tests/*.cpp -- -Iinclude
 
 - **Style**: Based on LLVM with 4-space indentation
 - **Column limit**: 100 characters
-- **C++ standard**: C++11
+- **C++ standard**: C++23
 - **Pointer alignment**: Left (`int* ptr`)
 - **Brace style**: Attach (K&R style)
 
@@ -135,7 +135,7 @@ Enabled check categories:
 - **google-***: Google style guide
 - **llvm-***: LLVM coding standards
 - **misc-***: Miscellaneous checks
-- **modernize-***: C++11/14/17 modernization
+- **modernize-***: C++11/14/17/20/23 modernization
 - **performance-***: Performance-related issues
 - **portability-***: Portability issues
 - **readability-***: Code readability improvements
