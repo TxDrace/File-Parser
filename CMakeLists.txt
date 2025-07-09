@@ -107,16 +107,20 @@ target_link_libraries(file_parser PRIVATE dummy)
 # Enable testing framework
 enable_testing()
 
+# Google Test
+find_package(GTest CONFIG REQUIRED)
+
 # Create test executable
 add_executable(dummy_test
     tests/dummy_test.cpp
 )
 
-# Link test executable with the library
-target_link_libraries(dummy_test PRIVATE dummy)
+# Link test executable with Google Test and the library
+target_link_libraries(dummy_test PRIVATE dummy GTest::gtest_main)
 
 # Register the test with CTest
-add_test(NAME DummyTest COMMAND dummy_test)
+include(GoogleTest)
+gtest_discover_tests(dummy_test)
 
 # ============================================================================
 # CODE QUALITY CUSTOM TARGETS

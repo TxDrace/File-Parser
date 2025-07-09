@@ -94,7 +94,7 @@ cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=vcpkg/scripts/buildsystems/vcpkg.cmak
 # Build the project
 cmake --build build
 
-# Run tests
+# Run tests (uses Google Test)
 ctest --test-dir build
 ```
 
@@ -103,12 +103,12 @@ ctest --test-dir build
 After building, test that everything works:
 
 ```bash
-# Run tests
-./dev.sh test
+# Run tests (Google Test)
+./dev.sh test run
 
 # Or manually:
 cd build
-ctest
+ctest  # runs Google Test suite
 
 # Run the main executable
 ./dev.sh run
