@@ -33,3 +33,8 @@ Naming Convention:
 - For variable: use snake_case
 - For function parameters: use _snake_case_with_hyperscore_before
 - For function name: user camelCase()
+
+How to write task report (in docs\task-reports): 
+- This is place for report per issue
+- The report is .md file, 
+- The structure of the report must follow the structure of the template docs\task-reports\template.md
