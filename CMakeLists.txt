@@ -20,8 +20,8 @@ option(ENABLE_CLANG_TIDY "Enable clang-tidy checks" OFF)
 option(ENABLE_CLANG_FORMAT "Enable clang-format checks" OFF)
 
 # C++ standard configuration
-# Set C++11 as the minimum standard for compatibility
-set(CMAKE_CXX_STANDARD 11)
+# Require C++23 for the entire project
+set(CMAKE_CXX_STANDARD 23)
 
 
 # ============================================================================

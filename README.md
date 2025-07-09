@@ -64,7 +64,7 @@ For detailed compiler information and build configurations, see `docs/inside/COM
 
 1. **vcpkg not found**: Make sure you've initialized submodules with `git submodule update --init --recursive` and bootstrapped vcpkg
 2. **CMake errors**: Ensure CMake version is 3.10 or higher
-3. **Compiler errors**: Verify your compiler supports C++11
+3. **Compiler errors**: Verify your compiler supports C++23
 4. **Permission errors** (Linux/macOS): Make scripts executable with `chmod +x *.sh`
 
 ### Getting Help

@@ -9,7 +9,7 @@ Before contributing to this project, ensure you have the following installed:
 - **Git** - For version control
 - **CMake** (version 3.10 or higher) - For build configuration
   - *Current environment: CMake 4.0.3*
-- **C++ Compiler** with C++11 support:
+- **C++ Compiler** with C++23 support:
   - **Windows**: Visual Studio 2017+ (currently using VS 2022 Community)
     - Includes MSVC compiler and Clang-cl (Clang 19.1.5)
   - **Alternative**: MinGW-w64/MSYS2 GCC (currently GCC 14.2.0 available)
