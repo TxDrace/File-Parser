@@ -1,12 +1,12 @@
 #include "compression.h"
 #include "dummy.h"
-#include <cassert>
-#include <iostream>
+#include <gtest/gtest.h>
 
-int main() {
-    assert(addNumbers(2, 3) == 5);
-    std::string version = getZlibVersion();
-    assert(!version.empty());
-    std::cout << "zlib version: " << version << std::endl;
-    return 0;
+TEST(DummyLibrary, AddNumbers) {
+    EXPECT_EQ(addNumbers(2, 3), 5);
 }
+
+TEST(DummyLibrary, ZlibVersionNotEmpty) {
+    EXPECT_FALSE(getZlibVersion().empty());
+}
+
