@@ -8,6 +8,12 @@ For prerequisites, setup instructions, and the full development workflow, see [C
 
 ```
 File-Parser/
+├── docs/              # Additional documentation
+│   ├── README.md
+│   └── inside/
+│       ├── BUILD.md
+│       ├── CODE_QUALITY.md
+│       └── COMPILER_SUPPORT.md
 ├── include/           # Header files
 │   ├── compression.h
 │   └── dummy.h
@@ -21,7 +27,6 @@ File-Parser/
 ├── vcpkg/            # Dependency manager (submodule)
 ├── CMakeLists.txt    # CMake configuration
 ├── vcpkg.json        # Dependency specification
-├── COMPILER_SUPPORT.md    # Compiler verification info
 └── dev.sh            # Development script with all functionality
 ```
 
@@ -40,7 +45,7 @@ This project has been successfully built with:
 
 The project uses Visual Studio 2022 generator by default. **To test different compilers**, use VS Code's `CMake: Select a Kit` command to switch between MSVC, Clang-cl, and GCC options.
 
-For detailed compiler information and build configurations, see `COMPILER_SUPPORT.md`.
+For detailed compiler information and build configurations, see `docs/inside/COMPILER_SUPPORT.md`.
 
 ## Troubleshooting
 

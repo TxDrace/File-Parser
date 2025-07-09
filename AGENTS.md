@@ -3,9 +3,12 @@ General:
 - After every change, update the project structure section so that it correctly reflects the project.
 
 Project Structure:
-- COMPILER_SUPPORT.md
-- CODE_QUALITY.md
-- BUILD.md
+- docs/
+    - README.md
+    - inside/
+        - BUILD.md
+        - CODE_QUALITY.md
+        - COMPILER_SUPPORT.md
 - AGENTS.md
 - CONTRIBUTING.md
 - README.md
