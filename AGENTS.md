@@ -42,8 +42,8 @@
 
 # Naming Convention:
 - For variable: use snake_case
-- For function parameters: use _snake_case_with_hyperscore_before
-- For function name: user camelCase()
+- For function parameters: use _snake_case_with_underscore_before
+- For function name: use camelCase()
 
 # How to write task report (in docs\\task-reports):
 - This is place for report per issue
