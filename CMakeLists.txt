@@ -69,6 +69,7 @@ find_package(ZLIB REQUIRED)
 add_library(dummy ${LIB_TYPE}
     src/dummy.cpp
     src/compression.cpp
+    src/zip_reader.cpp
 )
 
 # Make include directory available to consumers of this library
@@ -114,6 +115,7 @@ find_package(GTest CONFIG REQUIRED)
 add_executable(dummy_test
     tests/dummy_test.cpp
     tests/sample_test.cpp
+    tests/zip_reader_test.cpp
 )
 
 # Link test executable with Google Test and the library

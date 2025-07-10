@@ -1,7 +1,4 @@
-# File Parser
-
-This project provides a simple C++ skeleton built with CMake. A small dummy library is included to verify the toolchain. zlib is used as a third-party dependency.
-
+# File Parse
 For prerequisites, setup instructions, and the full development workflow, see [CONTRIBUTING.md](CONTRIBUTING.md). Additional documentation is available in [docs/README.md](docs/README.md).
 
 ## Project Structure
@@ -26,14 +23,18 @@ File-Parser/
 │       └── issue-6-github-actions-ci.md
 ├── include/           # Header files
 │   ├── compression.h
-│   └── dummy.h
+│   ├── dummy.h
+│   └── zip_reader.h
 ├── src/              # Source files
 │   ├── compression.cpp
 │   ├── dummy.cpp
-│   └── main.cpp
+│   ├── main.cpp
+│   └── zip_reader.cpp
 ├── tests/            # Test files
 │   ├── dummy_test.cpp
-│   └── sample_test.cpp
+│   ├── sample_test.cpp
+│   ├── zip_reader_test.cpp
+│   └── data/          # Test assets created at runtime
 ├── build/            # Build artifacts (generated)
 ├── vcpkg/            # Dependency manager (submodule)
 ├── CMakeLists.txt    # CMake configuration
