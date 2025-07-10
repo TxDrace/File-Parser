@@ -9,7 +9,7 @@ std::uint16_t readLe16(const std::uint8_t* _data) {
 
 std::uint32_t readLe32(const std::uint8_t* _data) {
     return static_cast<std::uint32_t>(_data[0] | (_data[1] << 8) | (_data[2] << 16) |
-                                       (_data[3] << 24));
+                                      (_data[3] << 24));
 }
 }  // namespace
 
@@ -57,9 +57,8 @@ bool ZipReader::parse() {
 
     const std::uint32_t eocd_signature = 0x06054b50;
     const std::size_t max_comment = 0xFFFF;
-    std::size_t search_start = source_->size() > (max_comment + 22) ?
-                               source_->size() - (max_comment + 22) :
-                               0;
+    std::size_t search_start =
+        source_->size() > (max_comment + 22) ? source_->size() - (max_comment + 22) : 0;
     std::vector<std::uint8_t> buffer(source_->size() - search_start);
     if (!source_->read(search_start, buffer.data(), buffer.size())) {
         return false;
@@ -135,4 +134,3 @@ bool ZipReader::parse() {
 
     return true;
 }
-
