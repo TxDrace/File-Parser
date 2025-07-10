@@ -125,6 +125,10 @@ clang-tidy src/*.cpp tests/*.cpp -- -Iinclude
 - **Pointer alignment**: Left (`int* ptr`)
 - **Brace style**: Attach (K&R style)
 
+### .clang-tidy Settings
+
+- **C++ standard**: C++23 (configured via `ExtraArgs: ['--std=c++23']`)
+
 ### .clang-tidy Checks
 
 Enabled check categories:
@@ -144,7 +148,8 @@ Enabled check categories:
 
 - **Classes/Structs**: `CamelCase`
 - **Functions**: `camelBack`
-- **Variables/Parameters**: `camelBack`
+- **Variables**: `lower_case`
+- **Parameters**: `_lower_case`
 - **Constants**: `UPPER_CASE`
 - **Enums**: `CamelCase`
 - **Enum constants**: `UPPER_CASE`

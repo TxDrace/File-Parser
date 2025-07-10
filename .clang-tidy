@@ -48,13 +48,13 @@ CheckOptions:
   - key: readability-identifier-naming.FunctionCase
     value: camelBack                            # Functions: void myFunction()
   - key: readability-identifier-naming.VariableCase
-    value: camelBack                            # Variables: int myVariable
+    value: lower_case                           # Variables: int my_variable
   - key: readability-identifier-naming.ParameterCase
     value: lower_case                           # Parameters: void func(int _my_param)
   - key: readability-identifier-naming.ParameterPrefix
     value: '_'                                  # Parameters must start with underscore
   - key: readability-identifier-naming.MemberCase
-    value: camelBack                            # Member variables: int myMember
+    value: lower_case                           # Member variables: int my_member
   - key: readability-identifier-naming.ConstantCase
     value: UPPER_CASE                           # Constants: const int MY_CONSTANT
   - key: readability-identifier-naming.EnumCase
@@ -105,3 +105,6 @@ FormatStyle: file
 # Don't analyze system headers to avoid noise from external libraries
 # Focus analysis on project code only
 SystemHeaders: false
+
+# Use C++23 standard when running clang-tidy
+ExtraArgs: ['--std=c++23']
