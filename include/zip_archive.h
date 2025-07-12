@@ -2,17 +2,10 @@
 #define ZIP_ARCHIVE_H
 
 #include "zip_reader.h"
+#include "zip_entry.h"
 
 #include <string>
 #include <vector>
-#include <cstdint>
-
-/** Represents a single file entry inside a zip archive. */
-struct ZipEntry {
-    std::string name;                 ///< File name
-    std::uint64_t compressed_size{};  ///< Compressed size in bytes
-    std::uint64_t uncompressed_size{};///< Uncompressed size in bytes
-};
 
 /** High level interface for inspecting a zip archive. */
 class ZipArchive {
