@@ -25,6 +25,7 @@ File-Parser/
 │   ├── compression.h
 │   ├── dummy.h
 │   ├── zip_archive.h
+│   ├── zip_entry.h
 │   └── zip_reader.h
 ├── src/              # Source files
 │   ├── compression.cpp

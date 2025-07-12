@@ -1,4 +1,5 @@
 #include "zip_archive.h"
+#include "zip_reader.h"
 
 #include <chrono>
 #include <filesystem>
@@ -47,4 +48,62 @@ TEST(ZipArchive, LoadFromMemory) {
     ASSERT_EQ(archive.entries().size(), 1u);
     EXPECT_EQ(archive.entries()[0].name, "test.txt");
     EXPECT_EQ(archive.entries()[0].uncompressed_size, 5u);
+}
+
+TEST(ZipReader, OpenFromMemoryValid) {
+    ZipReader reader(sample_zip, sizeof(sample_zip));
+    ASSERT_TRUE(reader.isOpen());
+    EXPECT_EQ(reader.entryCount(), 1u);
+    ZipEntry entry;
+    ASSERT_TRUE(reader.readEntry(0, entry));
+    EXPECT_EQ(entry.name, "test.txt");
+    EXPECT_EQ(entry.uncompressed_size, 5u);
+}
+
+TEST(ZipReader, OpenFromFileValid) {
+    std::filesystem::path file_path =
+        std::filesystem::temp_directory_path() /
+        ("zip_reader_file_" +
+         std::to_string(std::chrono::steady_clock::now().time_since_epoch().count()));
+
+    {
+        std::ofstream file(file_path, std::ios::binary);
+        file.write(reinterpret_cast<const char*>(sample_zip), sizeof(sample_zip));
+    }
+
+    {
+        ZipReader reader(file_path.string());
+        ASSERT_TRUE(reader.isOpen());
+        EXPECT_EQ(reader.entryCount(), 1u);
+        ZipEntry entry;
+        ASSERT_TRUE(reader.readEntry(0, entry));
+        EXPECT_EQ(entry.name, "test.txt");
+        EXPECT_EQ(entry.uncompressed_size, 5u);
+    }
+
+    std::filesystem::remove(file_path);
+}
+
+TEST(ZipReader, InvalidFilePath) {
+    ZipReader reader("non_existent_file.zip");
+    EXPECT_FALSE(reader.isOpen());
+    EXPECT_EQ(reader.entryCount(), 0u);
+    ZipEntry entry;
+    EXPECT_FALSE(reader.readEntry(0, entry));
+}
+
+TEST(ZipReader, InvalidMemory) {
+    const std::uint8_t invalid_zip[] = {1, 2, 3, 4};
+    ZipReader reader(invalid_zip, sizeof(invalid_zip));
+    EXPECT_FALSE(reader.isOpen());
+    EXPECT_EQ(reader.entryCount(), 0u);
+    ZipEntry entry;
+    EXPECT_FALSE(reader.readEntry(0, entry));
+}
+
+TEST(ZipReader, InvalidIndex) {
+    ZipReader reader(sample_zip, sizeof(sample_zip));
+    ASSERT_TRUE(reader.isOpen());
+    ZipEntry entry;
+    EXPECT_FALSE(reader.readEntry(5, entry));
 }

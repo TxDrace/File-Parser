@@ -29,4 +29,29 @@ ZipReader::~ZipReader() {
     }
 }
 
-zip_t* ZipReader::handle() const { return archive_; }
+bool ZipReader::isOpen() const { return archive_ != nullptr; }
+
+std::size_t ZipReader::entryCount() const {
+    if (!archive_) {
+        return 0;
+    }
+    zip_int64_t count = zip_get_num_entries(archive_, 0);
+    if (count < 0) {
+        return 0;
+    }
+    return static_cast<std::size_t>(count);
+}
+
+bool ZipReader::readEntry(std::size_t _index, ZipEntry& _entry) const {
+    if (!archive_) {
+        return false;
+    }
+    zip_stat_t sb;
+    if (zip_stat_index(archive_, static_cast<zip_uint64_t>(_index), 0, &sb) != 0) {
+        return false;
+    }
+    _entry.name = sb.name ? sb.name : "";
+    _entry.compressed_size = sb.comp_size;
+    _entry.uncompressed_size = sb.size;
+    return true;
+}

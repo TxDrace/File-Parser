@@ -3,8 +3,11 @@
 
 #include <cstdint>
 #include <string>
+#include <vector>
 
-#include <zip.h>
+#include "zip_entry.h"
+
+struct zip;
 
 /** Low level reader that opens a zip archive from file or memory. */
 class ZipReader {
@@ -13,10 +16,12 @@ class ZipReader {
     ZipReader(const std::uint8_t* _data, std::size_t _size);
     ~ZipReader();
 
-    [[nodiscard]] zip_t* handle() const;
+    [[nodiscard]] bool isOpen() const;
+    std::size_t entryCount() const;
+    bool readEntry(std::size_t _index, ZipEntry& _entry) const;
 
   private:
-    zip_t* archive_{};
+    zip* archive_{};
 };
 
 #endif  // ZIP_READER_H
