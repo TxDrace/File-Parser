@@ -31,13 +31,18 @@
 - include/
     - compression.h
     - dummy.h
+    - zip_archive.h
+    - zip_reader.h
 - src/
     - compression.cpp
     - dummy.cpp
+    - zip_archive.cpp
+    - zip_reader.cpp
     - main.cpp
 - tests/
     - dummy_test.cpp
     - sample_test.cpp
+    - zip_reader_test.cpp
 - vcpkg/
 
 # Naming Convention:

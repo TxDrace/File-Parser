@@ -1,4 +1,4 @@
-#include "zip_reader.h"
+#include "zip_archive.h"
 
 #include <chrono>
 #include <filesystem>
@@ -15,7 +15,7 @@ const std::uint8_t sample_zip[] = {
     6,   0,   0,   0,   0,  1, 0, 1,  0, 54,  0,   0,   0,   43,  0,   0,   0,   0,   0};
 }
 
-TEST(ZipReader, ParseFromFile) {
+TEST(ZipArchive, LoadFromFile) {
     // build a unique temp path
     std::filesystem::path file_path =
         std::filesystem::temp_directory_path() /
@@ -30,22 +30,21 @@ TEST(ZipReader, ParseFromFile) {
 
     // inner scope: reader is created, used, then destroyed
     {
-        ZipReader reader(std::make_unique<FileZipSource>(file_path.string()));
-        ASSERT_TRUE(reader.parse());
-        ASSERT_EQ(reader.files().size(), 1u);
-        EXPECT_EQ(reader.files()[0].name, "test.txt");
-        EXPECT_EQ(reader.files()[0].uncompressed_size, 5u);
-        // reader (and its FileZipSource) goes out-of-scope & closes here
+        ZipArchive archive(file_path.string());
+        ASSERT_TRUE(archive.load());
+        ASSERT_EQ(archive.entries().size(), 1u);
+        EXPECT_EQ(archive.entries()[0].name, "test.txt");
+        EXPECT_EQ(archive.entries()[0].uncompressed_size, 5u);
     }
 
     // now it's safe to delete the file
     std::filesystem::remove(file_path);
 }
 
-TEST(ZipReader, ParseFromMemory) {
-    auto reader = ZipReader(std::make_unique<MemoryZipSource>(sample_zip, sizeof(sample_zip)));
-    ASSERT_TRUE(reader.parse());
-    ASSERT_EQ(reader.files().size(), 1u);
-    EXPECT_EQ(reader.files()[0].name, "test.txt");
-    EXPECT_EQ(reader.files()[0].uncompressed_size, 5u);
+TEST(ZipArchive, LoadFromMemory) {
+    ZipArchive archive(sample_zip, sizeof(sample_zip));
+    ASSERT_TRUE(archive.load());
+    ASSERT_EQ(archive.entries().size(), 1u);
+    EXPECT_EQ(archive.entries()[0].name, "test.txt");
+    EXPECT_EQ(archive.entries()[0].uncompressed_size, 5u);
 }

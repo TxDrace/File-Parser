@@ -24,11 +24,13 @@ File-Parser/
 ├── include/           # Header files
 │   ├── compression.h
 │   ├── dummy.h
+│   ├── zip_archive.h
 │   └── zip_reader.h
 ├── src/              # Source files
 │   ├── compression.cpp
 │   ├── dummy.cpp
 │   ├── main.cpp
+│   ├── zip_archive.cpp
 │   └── zip_reader.cpp
 ├── tests/            # Test files
 │   ├── dummy_test.cpp

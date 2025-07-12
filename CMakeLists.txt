@@ -59,6 +59,7 @@ endif()
 # Simple dependency management with vcpkg
 # ZLIB is used for compression functionality
 find_package(ZLIB REQUIRED)
+find_package(libzip CONFIG REQUIRED)
 
 # ============================================================================
 # LIBRARY TARGET
@@ -70,6 +71,7 @@ add_library(dummy ${LIB_TYPE}
     src/dummy.cpp
     src/compression.cpp
     src/zip_reader.cpp
+    src/zip_archive.cpp
 )
 
 # Make include directory available to consumers of this library
@@ -87,7 +89,7 @@ endif()
 
 # Link the library with its dependencies
 # ZLIB is needed for compression functionality
-target_link_libraries(dummy PUBLIC ZLIB::ZLIB)
+target_link_libraries(dummy PUBLIC ZLIB::ZLIB libzip::zip)
 
 # ============================================================================
 # EXECUTABLE TARGET
