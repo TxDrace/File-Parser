@@ -4,9 +4,9 @@
 #include "zip_entry.h"
 #include "zip_reader.h"
 
+#include <cstdint>
 #include <string>
 #include <vector>
-#include <cstdint>
 
 /** High level interface for inspecting a zip archive. */
 class ZipArchive {

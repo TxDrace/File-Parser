@@ -19,9 +19,8 @@ void printZipInfo(const std::string& _path) {
     std::cout << "Archive contains " << archive.entries().size() << " entr";
     std::cout << (archive.entries().size() == 1 ? "y" : "ies") << "\n";
     for (const auto& entry : archive.entries()) {
-        std::cout << "- " << entry.name << " (" << entry.compressed_size
-                  << " bytes compressed, " << entry.uncompressed_size
-                  << " bytes uncompressed)\n";
+        std::cout << "- " << entry.name << " (" << entry.compressed_size << " bytes compressed, "
+                  << entry.uncompressed_size << " bytes uncompressed)\n";
     }
 }
 

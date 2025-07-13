@@ -32,9 +32,11 @@
     - zip_archive.h
     - zip_entry.h
     - zip_reader.h
+    - file_parser_error.h
  - src/
     - zip_archive.cpp
     - zip_reader.cpp
+    - file_parser_error.cpp
     - main.cpp
  - tests/
     - zip_reader_test.cpp

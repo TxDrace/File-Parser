@@ -2,8 +2,7 @@
 
 ZipArchive::ZipArchive(const std::string& _path) : reader_(_path) {}
 
-ZipArchive::ZipArchive(const std::uint8_t* _data, std::size_t _size)
-    : reader_(_data, _size) {}
+ZipArchive::ZipArchive(const std::uint8_t* _data, std::size_t _size) : reader_(_data, _size) {}
 
 bool ZipArchive::load() {
     if (!reader_.isOpen()) {

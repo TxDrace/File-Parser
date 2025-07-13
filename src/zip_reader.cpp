@@ -1,9 +1,9 @@
 #include "zip_reader.h"
 
-#include <zip.h>
 #include <curl/curl.h>
 #include <string>
 #include <vector>
+#include <zip.h>
 
 namespace {
 
@@ -40,8 +40,7 @@ ZipReader::ZipReader(const std::string& _path_or_url) {
         if (downloadUrl(_path_or_url, buffer_)) {
             zip_error_t error;
             zip_error_init(&error);
-            zip_source_t* src =
-                zip_source_buffer_create(buffer_.data(), buffer_.size(), 0, &error);
+            zip_source_t* src = zip_source_buffer_create(buffer_.data(), buffer_.size(), 0, &error);
             if (!src) {
                 zip_error_fini(&error);
                 archive_ = nullptr;
