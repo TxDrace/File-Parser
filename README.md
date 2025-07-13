@@ -21,6 +21,15 @@ File-Parser/
 │       ├── template.md
 │       ├── issue-3-unit-testing-framework.md
 │       └── issue-6-github-actions-ci.md
+├── AGENTS.md
+├── CONTRIBUTING.md
+├── README.md
+├── CMakeLists.txt
+├── dev.sh
+├── vcpkg.json
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 ├── include/           # Header files
 │   ├── compression.h
 │   ├── dummy.h
@@ -38,11 +47,7 @@ File-Parser/
 │   ├── sample_test.cpp
 │   ├── zip_reader_test.cpp
 │   └── data/          # Test assets created at runtime
-├── build/            # Build artifacts (generated)
-├── vcpkg/            # Dependency manager (submodule)
-├── CMakeLists.txt    # CMake configuration
-├── vcpkg.json        # Dependency specification
-└── dev.sh            # Development script with all functionality
+└── vcpkg/            # Dependency manager (submodule)
 ```
 
 ## Build Options
@@ -80,13 +85,13 @@ For detailed compiler information and build configurations, see `docs/inside/COM
 
 ## Running the Application
 
-After successful build:
+After building the project you can use the development script to run the CLI. The script forwards any additional arguments to the executable, which resides in `build/` on Unix-like systems or `build/Debug/` on Windows when using Visual Studio.
 
 ```bash
-./dev.sh run
+./dev.sh run zip <path_to_zip>
 ```
 
-The application demonstrates basic file compression/decompression functionality using zlib.
+The `zip` command prints a list of entries inside the archive including their compressed and uncompressed sizes. The application still links against zlib and reports the library version when executed.
 
 ## Running Tests
 

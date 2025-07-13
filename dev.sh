@@ -27,7 +27,7 @@ show_help() {
     echo "AVAILABLE COMMANDS:"
     echo "  build       Build the project (use 'build help' for options)"
     echo "  test        Run tests (use 'test help' for options)"
-    echo "  run         Run the main executable"
+    echo "  run         Run the main executable (forward arguments)"
     echo "  quality     Code quality tools (use 'quality help' for options)"
     echo "  utility     Utility commands (use 'utility help' for options)"
     echo ""
@@ -40,6 +40,7 @@ show_help() {
     echo "  $0 build release"
     echo "  $0 test coverage"
     echo "  $0 quality format"
+    echo "  $0 run zip archive.zip"
 }
 
 show_build_help() {
@@ -414,7 +415,7 @@ run_executable() {
     
     echo "Using executable: $executable_path"
     if [ -f "$executable_path" ]; then
-        "$executable_path"
+        "$executable_path" "$@"
     else
         echo "Executable not found at: $executable_path"
         echo "Please run 'build' first to compile the project."
@@ -600,7 +601,7 @@ case "$MAIN_COMMAND" in
         handle_test_command "$@"
         ;;
     run)
-        run_executable
+        run_executable "$@"
         ;;
     quality)
         handle_quality_command "$@"
