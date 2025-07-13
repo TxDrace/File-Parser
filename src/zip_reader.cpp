@@ -1,9 +1,10 @@
 #include "zip_reader.h"
+#include "file_parser_error.h"
 
-#include <zip.h>
 #include <curl/curl.h>
 #include <string>
 #include <vector>
+#include <zip.h>
 
 namespace {
 
@@ -19,7 +20,9 @@ size_t writeToBuffer(void* _ptr, size_t _size, size_t _nmemb, void* _userdata) {
     return total;
 }
 
-bool downloadUrl(const std::string& _url, std::vector<std::uint8_t>& _out) {
+bool downloadUrl(const std::string& _url,
+                 std::vector<std::uint8_t>& _out,
+                 long& _status) {
     CURL* curl = curl_easy_init();
     if (!curl) {
         return false;
@@ -29,36 +32,55 @@ bool downloadUrl(const std::string& _url, std::vector<std::uint8_t>& _out) {
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToBuffer);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &_out);
     CURLcode res = curl_easy_perform(curl);
+    if (res == CURLE_OK) {
+        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &_status);
+    } else {
+        _status = 0;
+    }
     curl_easy_cleanup(curl);
-    return res == CURLE_OK;
+    return res == CURLE_OK && _status < 400;
 }
 
 }  // namespace
 
 ZipReader::ZipReader(const std::string& _path_or_url) {
     if (isUrl(_path_or_url)) {
-        if (downloadUrl(_path_or_url, buffer_)) {
-            zip_error_t error;
-            zip_error_init(&error);
-            zip_source_t* src =
-                zip_source_buffer_create(buffer_.data(), buffer_.size(), 0, &error);
-            if (!src) {
-                zip_error_fini(&error);
-                archive_ = nullptr;
-                return;
+        long status = 0;
+        if (!downloadUrl(_path_or_url, buffer_, status)) {
+            if (status == 401 || status == 403) {
+                throw AccessDeniedError(_path_or_url);
             }
-            archive_ = zip_open_from_source(src, ZIP_RDONLY, &error);
-            if (!archive_) {
-                zip_source_free(src);
-            }
-            zip_error_fini(&error);
-            return;
+            throw UrlDownloadError(_path_or_url);
         }
-        archive_ = nullptr;
+
+        zip_error_t error;
+        zip_error_init(&error);
+        zip_source_t* src =
+            zip_source_buffer_create(buffer_.data(), buffer_.size(), 0, &error);
+        if (!src) {
+            std::string detail = zip_error_strerror(&error);
+            zip_error_fini(&error);
+            throw InvalidZipError(detail);
+        }
+        archive_ = zip_open_from_source(src, ZIP_RDONLY, &error);
+        if (!archive_) {
+            std::string detail = zip_error_strerror(&error);
+            zip_source_free(src);
+            zip_error_fini(&error);
+            throw InvalidZipError(detail);
+        }
+        zip_error_fini(&error);
         return;
     }
+
     int error = 0;
     archive_ = zip_open(_path_or_url.c_str(), ZIP_RDONLY, &error);
+    if (!archive_) {
+        if (error == ZIP_ER_OPEN || error == ZIP_ER_NOENT) {
+            throw FileNotFoundError(_path_or_url);
+        }
+        throw FileReadError(_path_or_url);
+    }
 }
 
 ZipReader::ZipReader(const std::uint8_t* _data, std::size_t _size) {
@@ -66,13 +88,16 @@ ZipReader::ZipReader(const std::uint8_t* _data, std::size_t _size) {
     zip_error_init(&error);
     zip_source_t* src = zip_source_buffer_create(_data, _size, 0, &error);
     if (!src) {
+        std::string detail = zip_error_strerror(&error);
         zip_error_fini(&error);
-        archive_ = nullptr;
-        return;
+        throw InvalidZipError(detail);
     }
     archive_ = zip_open_from_source(src, ZIP_RDONLY, &error);
     if (!archive_) {
+        std::string detail = zip_error_strerror(&error);
         zip_source_free(src);
+        zip_error_fini(&error);
+        throw InvalidZipError(detail);
     }
     zip_error_fini(&error);
 }
@@ -87,25 +112,24 @@ bool ZipReader::isOpen() const { return archive_ != nullptr; }
 
 std::size_t ZipReader::entryCount() const {
     if (!archive_) {
-        return 0;
+        throw ArchiveError("Archive not open");
     }
     zip_int64_t count = zip_get_num_entries(archive_, 0);
     if (count < 0) {
-        return 0;
+        throw InvalidZipError(zip_strerror(archive_));
     }
     return static_cast<std::size_t>(count);
 }
 
-bool ZipReader::readEntry(std::size_t _index, ZipEntry& _entry) const {
+void ZipReader::readEntry(std::size_t _index, ZipEntry& _entry) const {
     if (!archive_) {
-        return false;
+        throw ArchiveError("Archive not open");
     }
     zip_stat_t sb;
     if (zip_stat_index(archive_, static_cast<zip_uint64_t>(_index), 0, &sb) != 0) {
-        return false;
+        throw EntryReadError(std::to_string(_index));
     }
     _entry.name = sb.name ? sb.name : "";
     _entry.compressed_size = sb.comp_size;
     _entry.uncompressed_size = sb.size;
-    return true;
 }

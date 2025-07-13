@@ -18,7 +18,7 @@ class ZipReader {
 
     [[nodiscard]] bool isOpen() const;
     std::size_t entryCount() const;
-    bool readEntry(std::size_t _index, ZipEntry& _entry) const;
+    void readEntry(std::size_t _index, ZipEntry& _entry) const;
 
   private:
     std::vector<std::uint8_t> buffer_;

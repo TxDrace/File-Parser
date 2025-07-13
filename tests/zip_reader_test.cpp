@@ -1,5 +1,6 @@
 #include "zip_archive.h"
 #include "zip_reader.h"
+#include "file_parser_error.h"
 
 #include <chrono>
 #include <filesystem>
@@ -32,7 +33,7 @@ TEST(ZipArchive, LoadFromFile) {
     // inner scope: reader is created, used, then destroyed
     {
         ZipArchive archive(file_path.string());
-        ASSERT_TRUE(archive.load());
+        ASSERT_NO_THROW(archive.load());
         ASSERT_EQ(archive.entries().size(), 1u);
         EXPECT_EQ(archive.entries()[0].name, "test.txt");
         EXPECT_EQ(archive.entries()[0].uncompressed_size, 5u);
@@ -44,7 +45,7 @@ TEST(ZipArchive, LoadFromFile) {
 
 TEST(ZipArchive, LoadFromMemory) {
     ZipArchive archive(sample_zip, sizeof(sample_zip));
-    ASSERT_TRUE(archive.load());
+    ASSERT_NO_THROW(archive.load());
     ASSERT_EQ(archive.entries().size(), 1u);
     EXPECT_EQ(archive.entries()[0].name, "test.txt");
     EXPECT_EQ(archive.entries()[0].uncompressed_size, 5u);
@@ -55,7 +56,7 @@ TEST(ZipReader, OpenFromMemoryValid) {
     ASSERT_TRUE(reader.isOpen());
     EXPECT_EQ(reader.entryCount(), 1u);
     ZipEntry entry;
-    ASSERT_TRUE(reader.readEntry(0, entry));
+    ASSERT_NO_THROW(reader.readEntry(0, entry));
     EXPECT_EQ(entry.name, "test.txt");
     EXPECT_EQ(entry.uncompressed_size, 5u);
 }
@@ -76,7 +77,7 @@ TEST(ZipReader, OpenFromFileValid) {
         ASSERT_TRUE(reader.isOpen());
         EXPECT_EQ(reader.entryCount(), 1u);
         ZipEntry entry;
-        ASSERT_TRUE(reader.readEntry(0, entry));
+        ASSERT_NO_THROW(reader.readEntry(0, entry));
         EXPECT_EQ(entry.name, "test.txt");
         EXPECT_EQ(entry.uncompressed_size, 5u);
     }
@@ -85,25 +86,22 @@ TEST(ZipReader, OpenFromFileValid) {
 }
 
 TEST(ZipReader, InvalidFilePath) {
-    ZipReader reader("non_existent_file.zip");
-    EXPECT_FALSE(reader.isOpen());
-    EXPECT_EQ(reader.entryCount(), 0u);
-    ZipEntry entry;
-    EXPECT_FALSE(reader.readEntry(0, entry));
+    EXPECT_THROW({ ZipReader reader("non_existent_file.zip"); }, FileNotFoundError);
 }
 
 TEST(ZipReader, InvalidMemory) {
     const std::uint8_t invalid_zip[] = {1, 2, 3, 4};
-    ZipReader reader(invalid_zip, sizeof(invalid_zip));
-    EXPECT_FALSE(reader.isOpen());
-    EXPECT_EQ(reader.entryCount(), 0u);
-    ZipEntry entry;
-    EXPECT_FALSE(reader.readEntry(0, entry));
+    EXPECT_THROW({ ZipReader reader(invalid_zip, sizeof(invalid_zip)); }, InvalidZipError);
 }
 
 TEST(ZipReader, InvalidIndex) {
     ZipReader reader(sample_zip, sizeof(sample_zip));
     ASSERT_TRUE(reader.isOpen());
     ZipEntry entry;
-    EXPECT_FALSE(reader.readEntry(5, entry));
+    EXPECT_THROW(reader.readEntry(5, entry), EntryReadError);
+}
+
+TEST(ZipReader, UrlAccessDenied) {
+    const std::string url = "https://httpbin.org/status/401";
+    EXPECT_THROW({ ZipReader reader(url); }, AccessDeniedError);
 }

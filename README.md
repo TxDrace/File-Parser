@@ -33,11 +33,13 @@ File-Parser/
 ├── include/           # Header files
 │   ├── zip_archive.h
 │   ├── zip_entry.h
-│   └── zip_reader.h
+│   ├── zip_reader.h
+│   └── file_parser_error.h
 ├── src/              # Source files
 │   ├── main.cpp
 │   ├── zip_archive.cpp
-│   └── zip_reader.cpp
+│   ├── zip_reader.cpp
+│   └── file_parser_error.cpp
 ├── tests/            # Test files
 │   └── zip_reader_test.cpp
 └── vcpkg/            # Dependency manager (submodule)

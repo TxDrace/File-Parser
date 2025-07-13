@@ -68,6 +68,7 @@ find_package(CURL REQUIRED)
 add_library(file_parser_lib ${LIB_TYPE}
     src/zip_reader.cpp
     src/zip_archive.cpp
+    src/file_parser_error.cpp
 )
 
 # Make include directory available to consumers of this library
