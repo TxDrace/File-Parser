@@ -1,5 +1,3 @@
-#include "compression.h"
-#include "dummy.h"
 #include "zip_archive.h"
 #include <iostream>
 
@@ -41,7 +39,6 @@ int main(int argc, char* argv[]) {
             std::cerr << "Please provide a zip file path or URL\n";
             return 1;
         }
-        std::cout << "Using zlib version: " << getZlibVersion() << '\n';
         printZipInfo(argv[2]);
         return 0;
     }

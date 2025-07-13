@@ -31,22 +31,15 @@ File-Parser/
 │   └── workflows/
 │       └── ci.yml
 ├── include/           # Header files
-│   ├── compression.h
-│   ├── dummy.h
 │   ├── zip_archive.h
 │   ├── zip_entry.h
 │   └── zip_reader.h
 ├── src/              # Source files
-│   ├── compression.cpp
-│   ├── dummy.cpp
 │   ├── main.cpp
 │   ├── zip_archive.cpp
 │   └── zip_reader.cpp
 ├── tests/            # Test files
-│   ├── dummy_test.cpp
-│   ├── sample_test.cpp
-│   ├── zip_reader_test.cpp
-│   └── data/          # Test assets created at runtime
+│   └── zip_reader_test.cpp
 └── vcpkg/            # Dependency manager (submodule)
 ```
 
@@ -91,7 +84,7 @@ After building the project you can use the development script to run the CLI. Th
 ./dev.sh run zip <path_or_url_to_zip>
 ```
 
-The `zip` command prints a list of entries inside the archive including their compressed and uncompressed sizes. It also accepts HTTP or HTTPS URLs in place of a local file. The application still links against zlib and reports the library version when executed.
+The `zip` command prints a list of entries inside the archive including their compressed and uncompressed sizes. It also accepts HTTP or HTTPS URLs in place of a local file.
 
 ## Running Tests
 

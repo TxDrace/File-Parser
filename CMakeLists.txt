@@ -57,8 +57,6 @@ endif()
 # ============================================================================
 
 # Simple dependency management with vcpkg
-# ZLIB is used for compression functionality
-find_package(ZLIB REQUIRED)
 find_package(libzip CONFIG REQUIRED)
 find_package(CURL REQUIRED)
 
@@ -66,31 +64,27 @@ find_package(CURL REQUIRED)
 # LIBRARY TARGET
 # ============================================================================
 
-# Create the main library (dummy) with compression functionality
-# This library contains the core functionality of the file parser
-add_library(dummy ${LIB_TYPE}
-    src/dummy.cpp
-    src/compression.cpp
+# Create the main library providing core functionality
+add_library(file_parser_lib ${LIB_TYPE}
     src/zip_reader.cpp
     src/zip_archive.cpp
 )
 
 # Make include directory available to consumers of this library
-target_include_directories(dummy PUBLIC
+target_include_directories(file_parser_lib PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
 # Handle Windows DLL exports properly
 # Required for building shared libraries on Windows
 if(BUILD_SHARED AND WIN32)
-    set_target_properties(dummy PROPERTIES
+    set_target_properties(file_parser_lib PROPERTIES
         WINDOWS_EXPORT_ALL_SYMBOLS ON
     )
 endif()
 
 # Link the library with its dependencies
-# ZLIB is needed for compression functionality
-target_link_libraries(dummy PUBLIC ZLIB::ZLIB libzip::zip CURL::libcurl)
+target_link_libraries(file_parser_lib PUBLIC libzip::zip CURL::libcurl)
 
 # ============================================================================
 # EXECUTABLE TARGET
@@ -102,7 +96,7 @@ add_executable(file_parser
 )
 
 # Link the executable with the library
-target_link_libraries(file_parser PRIVATE dummy)
+target_link_libraries(file_parser PRIVATE file_parser_lib)
 
 # ============================================================================
 # TESTING
@@ -115,18 +109,16 @@ enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
 # Create test executable
-add_executable(dummy_test
-    tests/dummy_test.cpp
-    tests/sample_test.cpp
+add_executable(file_parser_test
     tests/zip_reader_test.cpp
 )
 
 # Link test executable with Google Test and the library
-target_link_libraries(dummy_test PRIVATE dummy GTest::gtest_main)
+target_link_libraries(file_parser_test PRIVATE file_parser_lib GTest::gtest_main)
 
 # Register the test with CTest
 include(GoogleTest)
-gtest_discover_tests(dummy_test)
+gtest_discover_tests(file_parser_test)
 
 # ============================================================================
 # CODE QUALITY CUSTOM TARGETS
@@ -180,5 +172,5 @@ if(CLANG_TIDY_EXE)
         WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
         COMMENT "Running clang-tidy checks"
         VERBATIM
-        DEPENDS dummy file_parser dummy_test    )
+        DEPENDS file_parser_lib file_parser file_parser_test    )
 endif()

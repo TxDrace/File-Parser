@@ -28,23 +28,17 @@
 - .github/
     - workflows/
         - ci.yml
-- include/
-    - compression.h
-    - dummy.h
+ - include/
     - zip_archive.h
     - zip_entry.h
     - zip_reader.h
-- src/
-    - compression.cpp
-    - dummy.cpp
+ - src/
     - zip_archive.cpp
     - zip_reader.cpp
     - main.cpp
-- tests/
-    - dummy_test.cpp
-    - sample_test.cpp
+ - tests/
     - zip_reader_test.cpp
-- vcpkg/
+ - vcpkg/
 
 # Naming Convention:
 - For variable: use snake_case
