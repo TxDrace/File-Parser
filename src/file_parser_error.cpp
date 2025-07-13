@@ -9,6 +9,8 @@ FileNotFoundError::FileNotFoundError(const std::string& _path)
     : IoError("File not found: " + _path) {}
 UrlDownloadError::UrlDownloadError(const std::string& _url)
     : IoError("Failed to download: " + _url) {}
+AccessDeniedError::AccessDeniedError(const std::string& _url)
+    : IoError("Access denied: " + _url) {}
 FileReadError::FileReadError(const std::string& _path) : IoError("Failed to read: " + _path) {}
 InvalidZipError::InvalidZipError(const std::string& _detail)
     : ParseError("Invalid zip archive: " + _detail) {}

@@ -100,3 +100,8 @@ TEST(ZipReader, InvalidIndex) {
     ZipEntry entry;
     EXPECT_THROW(reader.readEntry(5, entry), EntryReadError);
 }
+
+TEST(ZipReader, UrlAccessDenied) {
+    const std::string url = "https://httpbin.org/status/401";
+    EXPECT_THROW({ ZipReader reader(url); }, AccessDeniedError);
+}

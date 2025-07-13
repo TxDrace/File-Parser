@@ -39,6 +39,11 @@ class UrlDownloadError : public IoError {
     explicit UrlDownloadError(const std::string& _url);
 };
 
+class AccessDeniedError : public IoError {
+  public:
+    explicit AccessDeniedError(const std::string& _url);
+};
+
 class FileReadError : public IoError {
   public:
     explicit FileReadError(const std::string& _path);

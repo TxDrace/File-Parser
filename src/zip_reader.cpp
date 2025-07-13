@@ -20,7 +20,9 @@ size_t writeToBuffer(void* _ptr, size_t _size, size_t _nmemb, void* _userdata) {
     return total;
 }
 
-bool downloadUrl(const std::string& _url, std::vector<std::uint8_t>& _out) {
+bool downloadUrl(const std::string& _url,
+                 std::vector<std::uint8_t>& _out,
+                 long& _status) {
     CURL* curl = curl_easy_init();
     if (!curl) {
         return false;
@@ -30,15 +32,24 @@ bool downloadUrl(const std::string& _url, std::vector<std::uint8_t>& _out) {
     curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, writeToBuffer);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, &_out);
     CURLcode res = curl_easy_perform(curl);
+    if (res == CURLE_OK) {
+        curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &_status);
+    } else {
+        _status = 0;
+    }
     curl_easy_cleanup(curl);
-    return res == CURLE_OK;
+    return res == CURLE_OK && _status < 400;
 }
 
 }  // namespace
 
 ZipReader::ZipReader(const std::string& _path_or_url) {
     if (isUrl(_path_or_url)) {
-        if (!downloadUrl(_path_or_url, buffer_)) {
+        long status = 0;
+        if (!downloadUrl(_path_or_url, buffer_, status)) {
+            if (status == 401 || status == 403) {
+                throw AccessDeniedError(_path_or_url);
+            }
             throw UrlDownloadError(_path_or_url);
         }
 
