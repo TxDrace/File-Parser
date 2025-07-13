@@ -7,6 +7,7 @@
 class FileParserError : public std::runtime_error {
   public:
     explicit FileParserError(const std::string& _msg);
+    virtual ~FileParserError() = default;
 };
 
 class IoError : public FileParserError {
