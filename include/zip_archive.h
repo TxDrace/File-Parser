@@ -6,6 +6,7 @@
 
 #include <string>
 #include <vector>
+#include <cstdint>
 
 /** High level interface for inspecting a zip archive. */
 class ZipArchive {

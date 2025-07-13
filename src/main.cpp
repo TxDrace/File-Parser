@@ -8,7 +8,7 @@ namespace {
 void showUsage(const std::string& _program_name) {
     std::cout << "Usage: " << _program_name << " <command> [options]\n";
     std::cout << "Commands:\n";
-    std::cout << "  zip <file>    Parse zip file and print details\n";
+    std::cout << "  zip <file_or_url>    Parse zip file and print details\n";
 }
 
 void printZipInfo(const std::string& _path) {
@@ -38,7 +38,7 @@ int main(int argc, char* argv[]) {
     std::string command = argv[1];
     if (command == "zip") {
         if (argc < 3) {
-            std::cerr << "Please provide a zip file path\n";
+            std::cerr << "Please provide a zip file path or URL\n";
             return 1;
         }
         std::cout << "Using zlib version: " << getZlibVersion() << '\n';

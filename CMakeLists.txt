@@ -60,6 +60,7 @@ endif()
 # ZLIB is used for compression functionality
 find_package(ZLIB REQUIRED)
 find_package(libzip CONFIG REQUIRED)
+find_package(CURL REQUIRED)
 
 # ============================================================================
 # LIBRARY TARGET
@@ -89,7 +90,7 @@ endif()
 
 # Link the library with its dependencies
 # ZLIB is needed for compression functionality
-target_link_libraries(dummy PUBLIC ZLIB::ZLIB libzip::zip)
+target_link_libraries(dummy PUBLIC ZLIB::ZLIB libzip::zip CURL::libcurl)
 
 # ============================================================================
 # EXECUTABLE TARGET
