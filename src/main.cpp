@@ -1,4 +1,5 @@
 #include "zip_archive.h"
+#include "file_parser_error.h"
 #include <iostream>
 
 namespace {
@@ -11,10 +12,7 @@ void showUsage(const std::string& _program_name) {
 
 void printZipInfo(const std::string& _path) {
     ZipArchive archive(_path);
-    if (!archive.load()) {
-        std::cerr << "Failed to load zip archive: " << _path << '\n';
-        return;
-    }
+    archive.load();
 
     std::cout << "Archive contains " << archive.entries().size() << " entr";
     std::cout << (archive.entries().size() == 1 ? "y" : "ies") << "\n";
@@ -27,22 +25,27 @@ void printZipInfo(const std::string& _path) {
 }  // namespace
 
 int main(int argc, char* argv[]) {
-    if (argc < 2) {
-        showUsage(argv[0]);
-        return 0;
-    }
-
-    std::string command = argv[1];
-    if (command == "zip") {
-        if (argc < 3) {
-            std::cerr << "Please provide a zip file path or URL\n";
-            return 1;
+    try {
+        if (argc < 2) {
+            showUsage(argv[0]);
+            return 0;
         }
-        printZipInfo(argv[2]);
-        return 0;
-    }
 
-    std::cerr << "Unknown command: " << command << '\n';
-    showUsage(argv[0]);
-    return 1;
+        std::string command = argv[1];
+        if (command == "zip") {
+            if (argc < 3) {
+                throw MissingArgumentError("zip file path or URL");
+            }
+            printZipInfo(argv[2]);
+            return 0;
+        }
+
+        throw UnknownCommandError(command);
+    } catch (const FileParserError& _e) {
+        std::cerr << _e.what() << '\n';
+        return 1;
+    } catch (const std::exception& _e) {
+        std::cerr << "Unexpected error: " << _e.what() << '\n';
+        return 1;
+    }
 }

@@ -14,7 +14,7 @@ class ZipArchive {
     explicit ZipArchive(const std::string& _path);
     ZipArchive(const std::uint8_t* _data, std::size_t _size);
 
-    bool load();
+    void load();
     const std::vector<ZipEntry>& entries() const;
 
   private:
