@@ -12,7 +12,7 @@ struct zip;
 /** Low level reader that opens a zip archive from file or memory. */
 class ZipReader {
   public:
-    explicit ZipReader(const std::string& _path);
+    explicit ZipReader(const std::string& _path_or_url);
     ZipReader(const std::uint8_t* _data, std::size_t _size);
     ~ZipReader();
 
@@ -21,6 +21,7 @@ class ZipReader {
     bool readEntry(std::size_t _index, ZipEntry& _entry) const;
 
   private:
+    std::vector<std::uint8_t> buffer_;
     zip* archive_{};
 };
 

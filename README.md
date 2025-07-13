@@ -88,10 +88,10 @@ For detailed compiler information and build configurations, see `docs/inside/COM
 After building the project you can use the development script to run the CLI. The script forwards any additional arguments to the executable, which resides in `build/` on Unix-like systems or `build/Debug/` on Windows when using Visual Studio.
 
 ```bash
-./dev.sh run zip <path_to_zip>
+./dev.sh run zip <path_or_url_to_zip>
 ```
 
-The `zip` command prints a list of entries inside the archive including their compressed and uncompressed sizes. The application still links against zlib and reports the library version when executed.
+The `zip` command prints a list of entries inside the archive including their compressed and uncompressed sizes. It also accepts HTTP or HTTPS URLs in place of a local file. The application still links against zlib and reports the library version when executed.
 
 ## Running Tests
 
