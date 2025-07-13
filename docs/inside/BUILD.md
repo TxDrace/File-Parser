@@ -54,7 +54,6 @@ Feature-rich development script with multiple options:
 ## Dependencies
 
 The script will automatically install dependencies listed in `vcpkg.json`:
-- zlib (compression library)
 
 ## Output
 
@@ -64,7 +63,7 @@ Built executables are located in:
 
 Files:
 - `file_parser.exe` / `file_parser` - Main executable
-- `dummy_test.exe` / `dummy_test` - Test executable
+- `file_parser_test.exe` / `file_parser_test` - Test executable
 
 ## Troubleshooting
 

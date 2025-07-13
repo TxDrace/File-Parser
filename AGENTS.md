@@ -28,22 +28,22 @@
 - .github/
     - workflows/
         - ci.yml
-- include/
-    - compression.h
-    - dummy.h
-- src/
-    - compression.cpp
-    - dummy.cpp
+ - include/
+    - zip_archive.h
+    - zip_entry.h
+    - zip_reader.h
+ - src/
+    - zip_archive.cpp
+    - zip_reader.cpp
     - main.cpp
-- tests/
-    - dummy_test.cpp
-    - sample_test.cpp
-- vcpkg/
+ - tests/
+    - zip_reader_test.cpp
+ - vcpkg/
 
 # Naming Convention:
 - For variable: use snake_case
-- For function parameters: use _snake_case_with_hyperscore_before
-- For function name: user camelCase()
+- For function parameters: use _snake_case_with_underscore_before
+- For function name: use camelCase()
 
 # How to write task report (in docs\\task-reports):
 - This is place for report per issue

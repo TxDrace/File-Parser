@@ -1,8 +1,9 @@
 # .clang-format configuration for File-Parser project
-# Based on LLVM style with custom modifications for C++23 compatibility
+# Based on LLVM style with custom modifications for modern C++ development
 #
 # This configuration ensures consistent code formatting across the project
-# and follows modern C++ best practices while maintaining C++23 compatibility
+# and follows modern C++ best practices while remaining compatible with
+# a range of clang-format versions.
 
 # Base style - LLVM provides a good balance of readability and compactness
 BasedOnStyle: LLVM
@@ -14,7 +15,9 @@ UseTab: Never               # Always use spaces instead of tabs for portability
 ColumnLimit: 100            # Maximum line length - allows for modern wide screens
 
 # C++ specific settings
-Standard: c++23             # Target C++23 standard for this project
+# Use the newest standard supported by your clang-format binary. Newer versions
+# will treat this as C++23 while older versions fall back to C++20.
+Standard: Latest
 Cpp11BracedListStyle: true  # Use modern braced list formatting: {1, 2, 3}
 
 # Indentation settings

@@ -1,7 +1,4 @@
-# File Parser
-
-This project provides a simple C++ skeleton built with CMake. A small dummy library is included to verify the toolchain. zlib is used as a third-party dependency.
-
+# File Parse
 For prerequisites, setup instructions, and the full development workflow, see [CONTRIBUTING.md](CONTRIBUTING.md). Additional documentation is available in [docs/README.md](docs/README.md).
 
 ## Project Structure
@@ -24,21 +21,26 @@ File-Parser/
 │       ├── template.md
 │       ├── issue-3-unit-testing-framework.md
 │       └── issue-6-github-actions-ci.md
+├── AGENTS.md
+├── CONTRIBUTING.md
+├── README.md
+├── CMakeLists.txt
+├── dev.sh
+├── vcpkg.json
+├── .github/
+│   └── workflows/
+│       └── ci.yml
 ├── include/           # Header files
-│   ├── compression.h
-│   └── dummy.h
+│   ├── zip_archive.h
+│   ├── zip_entry.h
+│   └── zip_reader.h
 ├── src/              # Source files
-│   ├── compression.cpp
-│   ├── dummy.cpp
-│   └── main.cpp
+│   ├── main.cpp
+│   ├── zip_archive.cpp
+│   └── zip_reader.cpp
 ├── tests/            # Test files
-│   ├── dummy_test.cpp
-│   └── sample_test.cpp
-├── build/            # Build artifacts (generated)
-├── vcpkg/            # Dependency manager (submodule)
-├── CMakeLists.txt    # CMake configuration
-├── vcpkg.json        # Dependency specification
-└── dev.sh            # Development script with all functionality
+│   └── zip_reader_test.cpp
+└── vcpkg/            # Dependency manager (submodule)
 ```
 
 ## Build Options
@@ -76,13 +78,13 @@ For detailed compiler information and build configurations, see `docs/inside/COM
 
 ## Running the Application
 
-After successful build:
+After building the project you can use the development script to run the CLI. The script forwards any additional arguments to the executable, which resides in `build/` on Unix-like systems or `build/Debug/` on Windows when using Visual Studio.
 
 ```bash
-./dev.sh run
+./dev.sh run zip <path_or_url_to_zip>
 ```
 
-The application demonstrates basic file compression/decompression functionality using zlib.
+The `zip` command prints a list of entries inside the archive including their compressed and uncompressed sizes. It also accepts HTTP or HTTPS URLs in place of a local file.
 
 ## Running Tests
 

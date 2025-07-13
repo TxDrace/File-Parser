@@ -121,9 +121,13 @@ clang-tidy src/*.cpp tests/*.cpp -- -Iinclude
 
 - **Style**: Based on LLVM with 4-space indentation
 - **Column limit**: 100 characters
-- **C++ standard**: C++23
+- **C++ standard**: Latest (aiming for C++23)
 - **Pointer alignment**: Left (`int* ptr`)
 - **Brace style**: Attach (K&R style)
+
+### .clang-tidy Settings
+
+- **C++ standard**: C++23 (configured via `ExtraArgs: ['--std=c++23']`)
 
 ### .clang-tidy Checks
 
@@ -144,7 +148,8 @@ Enabled check categories:
 
 - **Classes/Structs**: `CamelCase`
 - **Functions**: `camelBack`
-- **Variables/Parameters**: `camelBack`
+- **Variables**: `lower_case`
+- **Parameters**: `_lower_case`
 - **Constants**: `UPPER_CASE`
 - **Enums**: `CamelCase`
 - **Enum constants**: `UPPER_CASE`
