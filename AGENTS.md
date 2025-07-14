@@ -19,6 +19,7 @@
         - template.md
         - issue-3-unit-testing-framework.md
         - issue-6-github-actions-ci.md
+        - issue-7-file-io-and-application-layer.md
 - AGENTS.md
 - CONTRIBUTING.md
 - README.md
