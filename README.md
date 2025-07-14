@@ -22,6 +22,7 @@ File-Parser/
 │       ├── issue-3-unit-testing-framework.md
 │       ├── issue-6-github-actions-ci.md
 │       └── issue-7-file-io-and-application-layer.md
+│       └── issue-10-handle-errors.md
 ├── AGENTS.md
 ├── CONTRIBUTING.md
 ├── README.md
